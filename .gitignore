@@ -1,0 +1,56 @@
+# ======================
+# Node / JS
+# ======================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ======================
+# React Native
+# ======================
+.expo/
+.expo-shared/
+.metro-health-check*
+
+# ======================
+# Android
+# ======================
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/app/debug/
+android/app/release/
+
+# local sdk / keystore
+android/local.properties
+android/app/*.keystore
+android/app/*.jks
+
+# ======================
+# iOS（即使现在不用，也别提交）
+# ======================
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+
+# ======================
+# IDE / Editor
+# ======================
+.idea/
+.vscode/
+*.iml
+
+# ======================
+# OS
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Env / secrets
+# ======================
+.env
+.env.*
