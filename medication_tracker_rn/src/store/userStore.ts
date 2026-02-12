@@ -1,14 +1,15 @@
 import { create } from 'zustand'
-import { api } from '../services/api'
 
-type UserState = {
-  userId?: string
-  login: (name: string) => Promise<void>
+type UserStore = {
+  userId: string | null
+  token: string | null
+  login: (userId: string, token: string) => void
+  logout: () => void
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  login: async (name) => {
-    const res = await api.post('/login', { name })
-    set({ userId: res.data.userId })
-  },
+export const useUserStore = create<UserStore>((set) => ({
+  userId: null,
+  token: null,
+  login: (userId, token) => set({ userId, token }),
+  logout: () => set({ userId: null, token: null }),
 }))
