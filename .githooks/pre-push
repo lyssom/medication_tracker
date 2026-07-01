@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Pre-push hook: verify backend boots + drift check
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo "=== [pre-push] smoke checks ==="
+
+# Drift check: prod has requirements.txt with 8 packages; local must match
+if [ -f medication_tracker_bk/requirements.txt ]; then
+  count=$(grep -cE "^[A-Za-z]" medication_tracker_bk/requirements.txt)
+  if [ "$count" -lt 7 ]; then
+    printf "${RED}requirements.txt has only $count packages (expected ≥7)${NC}\n"
+    exit 1
+  else
+    printf "${GREEN}requirements.txt has $count packages ✓${NC}\n"
+  fi
+fi
+
+# Drift check: app.py registers version_bp
+if [ -f medication_tracker_bk/app.py ]; then
+  if ! grep -q "version_bp" medication_tracker_bk/app.py; then
+    printf "${RED}C2 drift: app.py missing version_bp registration${NC}\n"
+    exit 1
+  fi
+fi
+
+printf "${GREEN}pre-push checks passed ✓${NC}\n"

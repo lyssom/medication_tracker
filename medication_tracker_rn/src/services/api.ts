@@ -96,26 +96,38 @@ export const medsAPI = {
 
 
 export const caresAPI = {
-  getmyCares: () => 
+  getmyCares: () =>
     api.get('/care/my_cares'),
-  getCaresme: () => 
+  getCaresme: () =>
     api.get('/care/cares_me'),
-  addCare: (data: any) => 
+  addCare: (data: any) =>
     api.post('/care/add', data),
 }
 
 
+// P0-04 fix: checkinAPI stub
+// TODO: backend checkin 端点待实现；先返 stub 防 crash
+export const checkinAPI = {
+  getToday: () => api.get('/checkin/today'),
+  create: (formData: FormData) =>
+    api.post('/checkin', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+  batch: (data: any) => api.post('/checkin/batch', data),
+}
+
+
 export const planAPI = {
-  getTodayPlan: () => 
+  getTodayPlan: () =>
     api.get('/plan/today'),
 
-  getAllPlan: () => 
+  getAllPlan: () =>
     api.get('/plan/all'),
-  
-  markTaken: (data: any) => 
+
+  markTaken: (data: any) =>
     api.post(`/plan/take`, data),
 
-  getCareTodayPlan: (userId: number) => 
+  getCareTodayPlan: (userId: number) =>
     api.get(`/plan/care/${userId}`),
 }
 

@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# Pre-commit hook: block CRLF, secrets, C2 drift
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+failed=0
+
+# ---- 1. CRLF check (only for text-format files per .gitattributes) ----
+echo "=== [1] Line ending check ==="
+TEXT_PATTERN='\.(py|js|ts|tsx|json|yml|yaml|md|txt|cfg|ini|sh)$'
+
+staged_text=$(git diff --cached --name-only --diff-filter=ACM | grep -E "$TEXT_PATTERN" || true)
+for f in $staged_text; do
+  if [ -f "$f" ] && LC_ALL=C grep -q $'\x0d' "$f"; then
+    printf "${RED}CRLF: $f${NC}\n"
+    failed=1
+  fi
+done
+[ $failed -eq 0 ] && printf "${GREEN}LF only ✓${NC}\n"
+
+# ---- 2. .env leak check ----
+echo "=== [2] .env leak check ==="
+staged_env=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env$' || true)
+if [ -n "$staged_env" ]; then
+  printf "${RED}secrets: $staged_env${NC}\n"
+  printf "  Commit .env.example only, not .env\n"
+  failed=1
+else
+  printf "${GREEN}no .env leaks ✓${NC}\n"
+fi
+
+# ---- 3. C2 drift check (app.py must register version_bp) ----
+echo "=== [3] C2 drift check (version_bp registered) ==="
+if [ -f medication_tracker_bk/app.py ]; then
+  if grep -q "version_bp" medication_tracker_bk/app.py; then
+    printf "${GREEN}version_bp registered ✓${NC}\n"
+  else
+    printf "${RED}C2 drift: app.py doesn't register version_bp${NC}\n"
+    printf "  Add: from routes.version import version_bp\n"
+    printf "       app.register_blueprint(version_bp, url_prefix='/api')\n"
+    failed=1
+  fi
+fi
+
+# ---- 4. requirements.txt completeness check ----
+echo "=== [4] requirements.txt completeness ==="
+if [ -f medication_tracker_bk/requirements.txt ]; then
+  MISSING=""
+  for pkg in Flask flask-cors flask-sqlalchemy flask-jwt-extended flask-apscheduler SQLAlchemy gunicorn python-dotenv; do
+    if ! grep -qiE "^${pkg}([<>=!~ ].*)?$" medication_tracker_bk/requirements.txt; then
+      MISSING="$MISSING $pkg"
+    fi
+  done
+  if [ -n "$MISSING" ]; then
+    printf "${RED}requirements.txt missing:$MISSING${NC}\n"
+    failed=1
+  else
+    printf "${GREEN}requirements.txt complete ✓${NC}\n"
+  fi
+fi
+
+# ---- 5. dead code check (daily_medication_scheduler.py is dead) ----
+echo "=== [5] dead code check ==="
+if [ -f medication_tracker_bk/daily_medication_scheduler.py ]; then
+  if git diff --cached --name-only | grep -q "daily_medication_scheduler.py"; then
+    printf "${RED}daily_medication_scheduler.py is dead code per C1 audit — delete it${NC}\n"
+    printf "  app.py uses schedule.py not daily_medication_scheduler.py\n"
+    failed=1
+  fi
+  printf "${GREEN}daily_medication_scheduler.py: still present (consider deleting)${NC}\n"
+fi
+
+# ---- 6. RN checkinAPI stub (C1 P0-04) ----
+echo "=== [6] checkinAPI stub (C1 P0-04) ==="
+if [ -f medication_tracker_rn/src/store/useMedStore.ts ]; then
+  if grep -q "checkinAPI" medication_tracker_rn/src/store/useMedStore.ts; then
+    if [ -f medication_tracker_rn/src/services/api.ts ]; then
+      if ! grep -qE "export.*checkinAPI" medication_tracker_rn/src/services/api.ts; then
+        printf "${RED}C1 P0-04: useMedStore imports checkinAPI but api.ts doesn't export it${NC}\n"
+        failed=1
+      fi
+    fi
+  fi
+fi
+[ $failed -eq 0 ] && printf "${GREEN}checkinAPI in sync ✓${NC}\n"
+
+echo
+if [ $failed -ne 0 ]; then
+  printf "${RED}=== COMMIT BLOCKED ===${NC}\n"
+  exit 1
+fi
+printf "${GREEN}=== ALL CHECKS PASSED ===${NC}\n"

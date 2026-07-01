@@ -1,0 +1,38 @@
+# Pre-commit framework config (install with: pip install pre-commit && pre-commit install)
+# Provides shared versioned hooks; complements .githooks/pre-commit
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        files: '\.(yaml|yml)$'
+      - id: check-json
+        files: '\.(json)$'
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=512']
+      - id: detect-private-key
+      - id: check-case-conflict
+
+  - repo: local
+    hooks:
+      # C2 drift check: app.py must register version_bp
+      - id: c2-version-bp
+        name: C2 - app.py registers version_bp
+        entry: bash -c "grep -q version_bp medication_tracker_bk/app.py || (echo 'C2 drift: app.py missing version_bp' && exit 1)"
+        language: system
+        pass_filenames: false
+        files: medication_tracker_bk/app.py
+
+      # Block secrets
+      - id: block-env-leak
+        name: Block .env secrets
+        entry: bash -c 'git diff --cached --name-only --diff-filter=ACM | grep -E "(^|/)\.env$" | grep -v "\.env\.example" | (xargs -I {} echo "secret leak: {}" && exit 1) || exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
