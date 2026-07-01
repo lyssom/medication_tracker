@@ -118,3 +118,19 @@ export const planAPI = {
   getCareTodayPlan: (userId: number) => 
     api.get(`/plan/care/${userId}`),
 }
+
+export interface AppVersion {
+  version: string;
+  build: number;
+  released_at?: string;
+  mandatory: boolean;
+  download_url: string;
+  notes: string;
+}
+
+export const versionAPI = {
+  getLatest: () =>
+    api.get<{ success: boolean; data: AppVersion; note?: string }>(
+      '/latest'
+    ),
+}
