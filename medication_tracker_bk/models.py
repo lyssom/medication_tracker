@@ -336,9 +336,10 @@ def _generate_daily_plans_logic():
 
         for item in times:
             time_str = item['time']
-            days = item.get('days', [])
+            days = item.get('days') or []
 
-            if weekday not in days:
+            # days 缺省为空 [] 表示"每天"；非空才判 weekday 是否在 days 中
+            if days and weekday not in days:
                 continue
 
             exists = DailyMedicationPlan.query.filter_by(

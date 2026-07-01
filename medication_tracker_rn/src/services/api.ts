@@ -140,6 +140,9 @@ export const planAPI = {
   markTaken: (data: any) =>
     api.post(`/plan/take`, data),
 
+  regenerateToday: () =>
+    api.post('/plan/regenerate'),
+
   getCareTodayPlan: (userId: number) =>
     api.get(`/plan/care/${userId}`),
 }

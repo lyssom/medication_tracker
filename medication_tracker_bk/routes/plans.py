@@ -27,6 +27,17 @@ def get_today_plans():
     return jsonify([p.to_dict() for p in plans])
 
 
+@plan_bp.route("/regenerate", methods=["POST"])
+@jwt_required()
+def regenerate_today_plans():
+    """重新生成今日 plan（幂等：已存在不重建）"""
+    from models import _generate_daily_plans_logic
+    from flask import current_app
+    with current_app.app_context():
+        _generate_daily_plans_logic()
+    return jsonify({"success": True, "message": "今日 plan 已重生成"}), 200
+
+
 
 @plan_bp.route("/take", methods=["POST"])
 @jwt_required()

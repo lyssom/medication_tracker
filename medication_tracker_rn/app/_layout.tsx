@@ -41,7 +41,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="auth/login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="meds/add" options={{ headerShown: false, presentation: 'modal' }} />
+        <Stack.Screen name="meds/add" options={{ headerShown: true, title: '添加药物', presentation: 'modal' }} />
         <Stack.Screen name="care/[userId]" options={{ headerShown: false }} />
       </Stack>
       <UpdateModal visible={!!(updateAvailable && latest && !dismissed)} version={latest} mandatory={mandatory} onDismiss={dismissOnce} />

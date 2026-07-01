@@ -1,10 +1,28 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, Alert } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuthStore } from '../../src/store/useAuthStore'
+
+interface MenuItem {
+  icon: string
+  label: string
+  sub: string
+  onPress: () => void
+}
 
 export default function SettingsScreen() {
   const router = useRouter()
   const { user, logout } = useAuthStore()
+
+  const placeholder = (label: string) => () =>
+    Alert.alert(label, '该功能开发中')
+
+  const menu: MenuItem[] = [
+    { icon: '🔔', label: '服药提醒', sub: '到点通知', onPress: placeholder('服药提醒') },
+    { icon: '🌙', label: '深色模式', sub: '跟随系统', onPress: placeholder('深色模式') },
+    { icon: '📦', label: '数据导出', sub: '导出打卡记录', onPress: placeholder('数据导出') },
+    { icon: 'ℹ️', label: '关于', sub: 'v0.0.1', onPress: placeholder('关于') },
+  ]
+
   return (
     <View className="flex-1 bg-gray-50 p-5">
       <Text className="text-2xl font-bold text-gray-900 mb-5">设置</Text>
@@ -25,14 +43,10 @@ export default function SettingsScreen() {
       </View>
 
       {/* Menu items */}
-      {[
-        { icon: '🔔', label: '服药提醒', sub: '到点通知' },
-        { icon: '🌙', label: '深色模式', sub: '跟随系统' },
-        { icon: '📦', label: '数据导出', sub: '导出打卡记录' },
-        { icon: 'ℹ️', label: '关于', sub: 'v0.0.1' },
-      ].map((item, i) => (
+      {menu.map((item) => (
         <Pressable
-          key={i}
+          key={item.label}
+          onPress={item.onPress}
           className="bg-white rounded-2xl px-5 py-4 border border-gray-100 flex-row items-center active:bg-gray-50 mb-2"
         >
           <Text className="text-2xl mr-3">{item.icon}</Text>
