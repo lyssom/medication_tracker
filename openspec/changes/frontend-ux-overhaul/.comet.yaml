@@ -9,15 +9,15 @@ language: zh
 state:
   open: complete
   design: complete
-  build: pending
+  build: complete
   verify: pending
   archive: pending
 
-isolation: branch (recommended; large surface)
+isolation: branch (feat/frontend-ux)
 build_mode: direct
 direct_override: true
 tdd_mode: direct
-build_pause: plan-ready
+build_pause: null
 
 artifacts:
   proposal: openspec/changes/frontend-ux-overhaul/proposal.md
