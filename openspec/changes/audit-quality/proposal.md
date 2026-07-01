@@ -20,7 +20,7 @@
 |---|---|---|
 | P0-01 | `routes/plans.py::get_care_user_today_plans` | `CareRelation` 鉴权整段注释掉，任何登录用户可看任意 `user_id` 今日服药。垂直越权。 |
 | P0-02 | `models.py::SupervisionRequest.to_dict` | 引用 `self.sender.nickname` / `self.receiver.nickname`，User 模型**无 `nickname` 字段**。模型一旦落入 `to_dict()` 即 `AttributeError`。模型未在路由调用 → 暂时不爆，但任何带关注请求的 response 都崩。 |
-| P0-03 | `routes/plans.py` Blueprint 路径双重前缀 | `plan_bp = Blueprint(..., url_prefix="/plan")` + `app.register_blueprint(plan_bp, url_prefix='/api/plan')` → 实际暴露 `/api/plan/plan/{today,take,all,care/<id>}`，但 RN `api.ts::planAPI.*` 调 `/plan/{today,take,all,care/<id>}`。4 个端点全部 404。 |
+| P0-03 | ~~`routes/plans.py` 双重前缀~~ | ⚠ 误报。Flask 3.1.3 中 `register_blueprint(url_prefix)` 会**覆盖**蓝图自身 prefix，不拼接；实测路由表 `/api/plan/{today,take,all,care/<id>}`。**该条取消**（C2 验证 [P0-03 验证]）。 |
 | P0-04 | `medication_tracker_rn/src/services/api.ts` | `checkinAPI` 在 store 被 import，但**未在 api.ts 中 export**。`useMedStore.fetchTodayStats / checkIn / batchCheckIn` 运行时 `checkinAPI is undefined` → TypeError。 |
 | P0-05 | `medication_tracker_rn/src/services/api.ts::authAPI` | `getProfile` → `/auth/me`、`logout` → `/auth/logout` 后端**未实现**，调用即 404 → 未拦截，store 不会崩但功能不可用。 |
 | P0-06 | `medication_tracker_bk/config.py` | JWT secret 硬编码：`'e68d62f4d3e09056c5476ebd271a56f264fda39354965d6aac38709021b58c53'`。Git 历史即泄漏。 |
