@@ -1,15 +1,23 @@
 import axios from 'axios'
-import { useAuthStore } from '../store/useAuthStore'
 
+// baseURL: 开发用本机 5000；生产用 https://lyssom.tech/medication
 export const api = axios.create({
-  // baseURL: 'http://114.215.177.111:5000/api', // Android 模拟器
-  baseURL: 'http://10.67.0.14:5000/api',
+  baseURL: __DEV__
+    ? 'http://10.67.0.124:5000/api'
+    : 'https://lyssom.tech/medication/api',
 })
 
-// 请求拦截器：自动加 Authorization
+// 请求拦截器：自动加 Authorization（延迟引用 useAuthStore 避免 require cycle）
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().accessToken
+    let token: string | null = null
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { useAuthStore } = require('../store/useAuthStore')
+      token = useAuthStore.getState().accessToken
+    } catch {
+      /* authStore not initialized yet */
+    }
 
     // 确保 headers 存在
     config.headers = config.headers ?? {}
@@ -34,12 +42,17 @@ api.interceptors.response.use(
     const { response } = error
 
     if (response?.status === 401) {
-      const state = useAuthStore.getState()
-
-      // 防止重复触发 logout
-      if (state.user) {
-        console.log('Token 失效或过期，自动登出')
-        state.logout()
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { useAuthStore } = require('../store/useAuthStore')
+        const state = useAuthStore.getState()
+        // 防止重复触发 logout
+        if (state.user) {
+          console.log('Token 失效或过期，自动登出')
+          state.logout()
+        }
+      } catch {
+        /* store not loaded */
       }
     }
 

@@ -1,0 +1,30 @@
+# Comet state for c5-frontend-rebuild
+
+change: c5-frontend-rebuild
+phase: design-complete
+preset: full
+workflow: standard
+language: zh
+
+state:
+  open: complete
+  design: complete
+  build: complete
+  verify: pending
+  archive: pending
+
+isolation: branch
+build_mode: direct
+direct_override: true
+tdd_mode: direct
+
+related_changes:
+  - frontend-ux-overhaul (superseded - was Tamagui, failed)
+  - session-and-update (depends on store layer)
+  - migrate-expo (already applied)
+
+rationale: |
+  C3 frontend-ux-overhaul originally chose Tamagui, but failed at runtime
+  on RN 0.85 + Expo 56 + React 19 due to Symbol-to-string error in
+  expo-router's mapProtectedScreen.js + Tamagui 2 react-dom requirement.
+  C5 re-picks NativeWind v4 (Tailwind classes, compile-time CSS, no react-dom).

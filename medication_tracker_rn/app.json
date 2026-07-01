@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "scheme": "medicationtracker",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.lyssom.medicationtrackerrn"
@@ -22,6 +22,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker",
+      "expo-secure-store",
+      "expo-splash-screen",
+      "expo-status-bar"
+    ]
   }
 }
