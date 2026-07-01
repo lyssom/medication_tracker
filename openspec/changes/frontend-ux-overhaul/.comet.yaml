@@ -1,0 +1,35 @@
+# Comet state for frontend-ux-overhaul
+
+change: frontend-ux-overhaul
+phase: design-complete
+preset: full
+workflow: standard
+language: zh
+
+state:
+  open: complete
+  design: complete
+  build: pending
+  verify: pending
+  archive: pending
+
+isolation: branch (recommended; large surface)
+build_mode: direct
+direct_override: true
+tdd_mode: direct
+build_pause: plan-ready
+
+artifacts:
+  proposal: openspec/changes/frontend-ux-overhaul/proposal.md
+  design: null
+  tasks: null
+  plan: null
+
+related_changes:
+  - audit-quality (depends on)
+  - migrate-expo (depends on)
+  - session-and-update (parallel)
+
+notes: |
+  C3 是最大重构 change，scope 广（9 屏 + 2 组件 + 1 路由层 + 1 主题层）。
+  建议 worktree 隔离，但用户偏好 branch。
