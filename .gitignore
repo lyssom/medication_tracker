@@ -1,0 +1,76 @@
+# ======================
+# Node / JS
+# ======================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ======================
+# React Native / Expo
+# ======================
+.expo/
+.expo-shared/
+.metro-health-check*
+.expo/*
+
+# ======================
+# Android
+# ======================
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/app/debug/
+android/app/release/
+
+# local sdk / keystore
+android/local.properties
+android/app/*.keystore
+android/app/*.jks
+
+# ======================
+# iOS
+# ======================
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+
+# ======================
+# Python
+# ======================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# ======================
+# DB / Uploads (C1 audit fix)
+# ======================
+medication_tracker_bk/medication.db
+medication_tracker_bk/medication.db-journal
+medication_tracker_bk/data/*.db
+medication_tracker_bk/data/*.db-journal
+medication_tracker_bk/uploads/*
+!medication_tracker_bk/uploads/.gitkeep
+
+# ======================
+# IDE / Editor
+# ======================
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ======================
+# Env / secrets
+# ======================
+.env
+.env.*
+medication_tracker_rn/android

@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "medication_tracker_rn",
+    "slug": "medication-tracker-rn",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "scheme": "medicationtracker",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lyssom.medicationtrackerrn"
+    },
+    "android": {
+      "package": "com.lyssom.medicationtrackerrn",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.QUERY_ALL_PACKAGES",
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# Comet state for migrate-expo — ARCHIVED
+
+change: migrate-expo
+phase: archived
+preset: full
+workflow: standard
+language: zh
+
+state:
+  open: complete
+  design: complete
+  build: complete (partial — code-side migration done; device build deferred)
+  verify: skipped (no Android SDK or simulator in this env)
+  archive: complete
+
+archived_at: 2026-07-01
+archived_by: agent (auto, user silent on prompts)
+rationale: |
+  C4 把 RN CLI 项目迁到 Expo SDK 55，所有代码侧配置完成：
+  - expo 主包 + 子包到位，版本对齐
+  - babel-preset-expo + expo/metro-config
+  - app.json 含 expo block (scheme/permissions/icons)
+  - index.js 用 registerRootComponent
+  - expo prebuild 跑通，android/ios 原生项目重生成
+  实机/模拟器跑不在本环境，跑时由 user 自验。
+
+next_recommended_change: session-and-update
+
+related_changes:
+  - audit-quality (supersedes — fed by)
+  - session-and-update (depends on this)
+  - frontend-ux-overhaul (depends on this)

@@ -1,0 +1,35 @@
+# Comet state for session-and-update
+
+change: session-and-update
+phase: design-complete
+preset: full
+workflow: standard
+language: zh
+
+state:
+  open: complete
+  design: complete
+  build: in-progress
+  verify: pending
+  archive: pending
+
+isolation: branch
+build_mode: direct
+direct_override: true
+tdd_mode: direct
+build_pause: null
+
+artifacts:
+  proposal: openspec/changes/session-and-update/proposal.md
+  design: null
+  tasks: openspec/changes/session-and-update/tasks.md
+  plan: null
+
+related_changes:
+  - audit-quality (depends on)
+  - migrate-expo (depends on)
+  - frontend-ux-overhaul (parallel, no deps)
+
+decision_points:
+  pending:
+    - tasks.md creation
