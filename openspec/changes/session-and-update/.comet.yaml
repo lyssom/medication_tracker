@@ -9,7 +9,7 @@ language: zh
 state:
   open: complete
   design: complete
-  build: in-progress
+  build: complete
   verify: pending
   archive: pending
 
