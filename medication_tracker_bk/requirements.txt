@@ -1,0 +1,8 @@
+Flask&gt;=3.1,&lt;4.0
+flask-cors&gt;=6.0,&lt;7.0
+flask-sqlalchemy&gt;=3.1,&lt;4.0
+flask-jwt-extended&gt;=4.7,&lt;5.0
+flask-apscheduler&gt;=1.13,&lt;2.0
+SQLAlchemy&gt;=2.0,&lt;3.0
+gunicorn&gt;=23.0,&lt;24.0
+python-dotenv&gt;=1.0,&lt;2.0
