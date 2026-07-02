@@ -231,6 +231,63 @@ pkill -9 -f java
 | 内存临界 8G | 跑 NDK 编译时如果系统其他进程占内存，可能 OOM |
 | 磁盘临界 17G free | 装 SDK 11G + 缓存 6G，剩 0 时 build 必失败 |
 
+## 网络代理 (mihomo on 127.0.0.1:7890)
+
+本机走 mihomo 代理。`dl.google.com` / `services.gradle.org` 直连不通，但代理 OK。Gradle 不会自动读 `http_proxy` env，必须显式配。
+
+### 方案 A: `gradle.properties` (推荐)
+
+`android/gradle.properties` 末尾加：
+
+```properties
+systemProp.http.proxyHost=127.0.0.1
+systemProp.http.proxyPort=7890
+systemProp.https.proxyHost=127.0.0.1
+systemProp.https.proxyPort=7890
+systemProp.http.nonProxyHosts=localhost|127.0.0.1|10.*|192.168.*|*.local
+android.builder.sdkDownload=false
+```
+
+`android.builder.sdkDownload=false` 防止 AGP 自动调 `dl.google.com` 拉 SDK manifest (addons_list-6.xml 超时)。SDK 已预装。
+
+### 方案 B: `JAVA_TOOL_OPTIONS` (env, 兑底)
+
+```bash
+export JAVA_TOOL_OPTIONS="-Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=7890 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=7890"
+```
+
+所有 JVM 进程 (含 gradlew) 都读。
+
+### 现象 / 诊断
+
+| 现象 | 原因 | 修复 |
+|---|---|---|
+| `Network is unreachable` 跳 `dl.google.com:443` | AGP 跳过代理 | 加 `gradle.properties` proxy 或 `JAVA_TOOL_OPTIONS` |
+| `gradlew` 不读 env proxy | gradlew 内部 fork 的 JVM 不读 `http_proxy` | 用 `JAVA_TOOL_OPTIONS` 或 `gradle.properties` systemProp |
+| `addons_list-6.xml` 超时 | AGP 自动下 SDK manifest | `android.builder.sdkDownload=false` |
+| `services.gradle.org` 超时 | Gradle wrapper 下载 | 用本地 `/opt/gradle/gradle-8.13/bin/gradle` 不下 wrapper |
+
+### 后台跑 build（免被 shell exit 杀）
+
+```bash
+cd /root/medication_tracker/medication_tracker_rn/android
+export ANDROID_HOME=/opt/android-sdk
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export JAVA_TOOL_OPTIONS="-Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=7890 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=7890"
+export PATH=/opt/gradle/gradle-8.13/bin:/usr/lib/jvm/java-17-openjdk/bin:/opt/android-sdk/platform-tools:$PATH
+
+setsid /opt/gradle/gradle-8.13/bin/gradle :app:assembleRelease \
+  --no-daemon --max-workers=1 -x lint -PreactNativeArchitectures=arm64-v8a \
+  > /tmp/gradle-build.log 2>&1 < /dev/null &
+disown
+
+# poll
+sleep 60 && tail -20 /tmp/gradle-build.log && wc -l /tmp/gradle-build.log
+```
+
+预期 ~5 分钟 (v0.2.0 实测 4m 50s, 526 tasks).
+
 ## 内存/磁盘的现状（2026-07-01）
 
 ```
@@ -244,9 +301,9 @@ Disk:   200G  /  183G used  /  17G free
 
 | 文件 | 大小 | 用途 |
 |---|---|---|
-| `app-release.apk` | 41MB | sideload 到手机，独立可跑 |
-| `app-debug.apk` | 63MB | 需 Metro 同网跑 |
-| `app-release-unsigned.apk` | 41MB | 用 release key 签（未做） |
+| `app-release.apk` | ~110MB (v0.2.0+, 含 3 fonts + haptics + 14 expo modules) | sideload 到手机，独立可跑 |
+| `app-debug.apk` | ~63MB | 需 Metro 同网跑 |
+| `app-release-unsigned.apk` | ~110MB | 用 release key 签（未做） |
 
 ## 备注
 
