@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>药伴 · 设计方向对比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0F1210; --ink:#F8F4ED; --muted:#9CA39D; --green:#10B981; --hair:rgba(255,255,255,.10); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1480px; margin: 0 auto; padding: 0 36px; }
+  .display { font-family: "Newsreader", serif; font-weight: 500; }
+
+  header.intro {
+    padding: 64px 0 48px; border-bottom: 1px solid var(--hair);
+  }
+  header.intro .label {
+    font-size: 11.5px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 22px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  header.intro .label::before { content: ""; width: 28px; height: 1px; background: var(--green); }
+  header.intro h1 {
+    font-family: "Newsreader", serif; font-weight: 400;
+    font-size: clamp(36px, 4.4vw, 56px); line-height: 1.1; letter-spacing: -.02em;
+    margin: 0 0 20px; max-width: 920px;
+  }
+  header.intro h1 em { font-style: italic; color: var(--green); font-weight: 400; }
+  header.intro p { font-size: 16px; color: var(--muted); line-height: 1.6; max-width: 720px; margin: 0; }
+  header.intro .meta-row {
+    display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+    font-size: 13px; color: var(--muted);
+  }
+  header.intro .meta-row strong { color: var(--ink); display: block; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+
+  /* version grid */
+  section.versions { padding: 56px 0 64px; }
+  .ver-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .ver {
+    background: #1A1F1C; border: 1px solid var(--hair);
+    border-radius: 24px; overflow: hidden;
+    transition: transform .3s, border-color .3s;
+  }
+  .ver:hover { transform: translateY(-3px); border-color: var(--green); }
+  .ver .frame {
+    background: #FFF; height: 540px; overflow: hidden; position: relative;
+  }
+  .ver .frame iframe {
+    width: 100%; height: 100%; border: 0; display: block;
+    transform-origin: top left;
+  }
+  .ver .info { padding: 22px 24px; }
+  .ver .info .ver-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(16,185,129,.12); color: var(--green);
+    padding: 5px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .04em;
+    margin-bottom: 14px;
+  }
+  .ver .info h2 {
+    font-family: "Newsreader", serif; font-weight: 500;
+    font-size: 26px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.015em;
+  }
+  .ver .info .summary {
+    font-size: 13.5px; color: var(--muted); line-height: 1.55; margin: 0 0 18px;
+  }
+  .ver .info .strategy {
+    font-size: 11.5px; color: #6F7B72; letter-spacing: .04em;
+    padding-top: 12px; border-top: 1px solid var(--hair);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ver .info .strategy .num { font-family: "Newsreader", serif; font-style: italic; font-size: 16px; color: var(--ink); }
+
+  .ver .open {
+    display: flex; gap: 8px; margin-top: 18px;
+  }
+  .ver .open a {
+    flex: 1; text-align: center;
+    padding: 11px 14px; border-radius: 10px;
+    text-decoration: none; font-size: 13px; font-weight: 500;
+    transition: background .2s;
+  }
+  .ver .open a.primary { background: var(--green); color: #00261E; }
+  .ver .open a.primary:hover { background: #0EA371; }
+  .ver .open a.secondary { background: rgba(255,255,255,.06); color: var(--ink); border: 1px solid var(--hair); }
+  .ver .open a.secondary:hover { background: rgba(255,255,255,.1); }
+
+  /* small notes */
+  .notes {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    padding: 0 0 80px;
+  }
+  .note {
+    background: #1A1F1C; border: 1px solid var(--hair);
+    border-radius: 14px; padding: 18px 20px;
+  }
+  .note .who {
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 10px;
+  }
+  .note p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.55; }
+
+  footer { padding: 40px 0 64px; border-top: 1px solid var(--hair); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer a { color: var(--green); text-decoration: none; }
+
+  @media (max-width: 1100px) {
+    .ver-grid { grid-template-columns: 1fr; }
+    .notes { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="intro wrap">
+  <div class="label">药伴 · Landing · 3 种方向对比</div>
+  <h1>同一份内容，<em>三种气质。</em></h1>
+  <p>
+    下面对比了为这个项目准备的三个 landing page 版本。
+    共享同一份产品数据（v0.1.0、41 MB、关心/被关心关系、邀请码、依从率），
+    但设计语言、节奏与情绪各自不同。挑一种你认为最契合这个产品气质的方向，我们再迭代。
+  </p>
+  <div class="meta-row">
+    <div><strong>产品名</strong>药伴（MedicationTracker）</div>
+    <div><strong>核心情绪</strong>温暖 / 守护 / 不打扰</div>
+    <div><strong>下载</strong>41 MB APK · Android 8.0+ · 全平台都免费</div>
+    <div><strong>生产链接</strong>lyssom.tech/medication</div>
+  </div>
+</header>
+
+<section class="versions wrap">
+  <div class="ver-grid">
+
+    <div class="ver">
+      <div class="frame">
+        <iframe src="v1-editorial.html" scrolling="no" loading="lazy" title="Editorial Warm"></iframe>
+      </div>
+      <div class="info">
+        <div class="ver-tag">★ 适合大多数</div>
+        <h2>Editorial Warm</h2>
+        <p class="summary">像一本写给读者的杂志专题。Newsreader serif 与暖米白底，
+        让"关心"成为主角——长引语、写作节奏、安静引用。给品牌一种思考者气质。</p>
+        <div class="strategy">
+          <span>设计逻辑 · 现实参照</span>
+          <span class="num">I</span>
+        </div>
+        <div class="open">
+          <a class="primary" href="v1-editorial.html" target="_blank">打开新版 ↗</a>
+          <a class="secondary" href="v1-editorial.html" download>下载 HTML</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ver">
+      <div class="frame">
+        <iframe src="v2-bento.html" scrolling="no" loading="lazy" title="Quiet Bento"></iframe>
+      </div>
+      <div class="info">
+        <div class="ver-tag">现代 SaaS 调</div>
+        <h2>Quiet Bento</h2>
+        <p class="summary">bento card 网格——一个 hero 大块、几个数据块、功能三连排。
+        像 Stripe Dashboard 一样的信息组织感，但用更柔的颜色中和技术的冷。</p>
+        <div class="strategy">
+          <span>设计逻辑 · 风格库</span>
+          <span class="num">II</span>
+        </div>
+        <div class="open">
+          <a class="primary" href="v2-bento.html" target="_blank">打开新版 ↗</a>
+          <a class="secondary" href="v2-bento.html" download>下载 HTML</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ver">
+      <div class="frame">
+        <iframe src="v3-brand.html" scrolling="no" loading="lazy" title="Brand Bold"></iframe>
+      </div>
+      <div class="info">
+        <div class="ver-tag" style="background: rgba(16,185,129,.2); border:1px solid var(--green);">★ 你选的</div>
+        <h2>Brand Bold</h2>
+        <p class="summary">整片 emerald 绿作 hero——让品牌色变成一种表态，
+        三个手机 stage 错落展示核心场景。最简、最远、最有自信。<br/>
+        <strong style="color:var(--green);">已套用新品牌「药伴」+ slogan。</strong></p>
+        <div class="strategy">
+          <span>设计逻辑 · 顶级定制</span>
+          <span class="num">III</span>
+        </div>
+        <div class="open">
+          <a class="primary" href="v3-brand.html" target="_blank">打开新版 ↗</a>
+          <a class="secondary" href="v3-brand.html" download>下载 HTML</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="wrap notes">
+  <div class="note">
+    <div class="who">─ 编辑推荐 · Editorial</div>
+    <p>这一版的情绪最契合"关心"这个产品的本质——长者用药、家庭观察、慢周期。
+      它不抢戏，让使用者的真实生活成为画面的主角。</p>
+  </div>
+  <div class="note">
+    <div class="who">─ 工程推荐 · Bento</div>
+    <p>bento 网格最能装——以后要加 FAQ、加 changelog、加技术 detail 都很自然。
+      是后期延展性最强的一版。</p>
+  </div>
+  <div class="note">
+    <div class="who">─ 创意推荐 · Brand Bold</div>
+    <p>最大胆、品牌识别度最高。如果想给这个项目一个"过目不忘"的门面，选这一版。
+      风险是它依赖品牌色，确实需要 emerald 把视觉撑住。</p>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>三版共享同一份内容（产品名 <strong style="color:var(--ink);">药伴</strong> · slogan · 功能 · 下载链接 · QR）。</div>
+  <div>选好后告诉我：「<a href="#">v1 加深</a> / <a href="#">v2 改色</a> / <a href="#">v3 收绿</a>」或「混合 A+B 的 X 部分」。</div>
+</footer>
+
+<script>
+  // auto-scale iframes to roughly match actual page width in small viewport
+  document.querySelectorAll('.ver .frame iframe').forEach(frame => {
+    frame.addEventListener('load', () => {
+      try {
+        const doc = frame.contentDocument;
+        if (!doc || !doc.body) return;
+        const scale = Math.min(1, frame.clientWidth / 1200);
+        if (scale < 1) {
+          frame.style.transform = `scale(${scale})`;
+          frame.style.width = (100 / scale) + '%';
+          frame.style.height = (frame.clientHeight / scale) + 'px';
+        }
+      } catch (e) { /* cross-origin – ignore */ }
+    });
+  });
+</script>
+
+</body>
+</html>

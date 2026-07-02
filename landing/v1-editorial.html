@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>药伴 · 吃药不再是一个人的事</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/icon.png" />
+<style>
+  :root {
+    --ink:        #1F1B16;
+    --paper:      #F8F4ED;
+    --paper-deep: #EFE7D8;
+    --rust:       #B85C3D;
+    --teal:       #0F766E;
+    --muted:      #6B5F50;
+    --hairline:   rgba(31,27,22,.12);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: "Noto Serif SC", "PingFang SC", "Hiragino Sans GB", "Newsreader", serif;
+    font-weight: 400; line-height: 1.65;
+    font-feature-settings: "ss01", "ss02", "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans { font-family: "Inter", system-ui, sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+
+  /* nav */
+  nav.site {
+    padding: 28px 0; border-bottom: 1px solid var(--hairline);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "PingFang SC", "Noto Sans SC", "Inter", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: .12em; color: #1F1B16;
+    text-decoration: none; color: var(--ink);
+  }
+  .brand img { width: 28px; height: 28px; }
+  nav .nav-links { display: flex; gap: 32px; }
+  nav .nav-links a {
+    font-family: "Inter", sans-serif; font-size: 13.5px; letter-spacing: .04em;
+    color: var(--muted); text-decoration: none; text-transform: uppercase;
+  }
+  nav .nav-links a:hover { color: var(--ink); }
+
+  /* hero */
+  .hero {
+    padding: 96px 0 80px;
+    display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px;
+    align-items: center;
+  }
+  .kicker {
+    font-family: "Inter", sans-serif;
+    font-size: 12px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 32px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .kicker::before { content: ""; width: 32px; height: 1px; background: var(--teal); }
+  h1 {
+    font-family: "Newsreader", serif; font-weight: 400;
+    font-size: clamp(48px, 5.4vw, 76px); line-height: 1.04;
+    letter-spacing: -0.02em; margin: 0 0 28px;
+  }
+  h1 em { font-style: italic; color: var(--rust); font-weight: 400; }
+  .lede {
+    font-size: 19px; line-height: 1.7; color: var(--muted);
+    max-width: 520px; margin: 0 0 40px;
+  }
+  .cta-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .btn-download {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 18px 30px; background: var(--ink); color: var(--paper);
+    font-family: "Inter", sans-serif; font-size: 14.5px; letter-spacing: .04em;
+    text-decoration: none; border-radius: 999px;
+    transition: background .25s, transform .25s;
+  }
+  .btn-download:hover { background: #000; transform: translateY(-1px); }
+  .btn-download svg { width: 18px; height: 18px; }
+  .meta-line {
+    font-family: "Inter", sans-serif; font-size: 12.5px; color: var(--muted);
+  }
+  .meta-line code { background: var(--paper-deep); padding: 2px 7px; border-radius: 4px; font-size: 11.5px; }
+
+  /* hero art - phone */
+  .phone-card {
+    background: var(--paper-deep); border-radius: 28px; padding: 48px 36px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 30px 80px -40px rgba(31,27,22,.4);
+  }
+  .phone-card::before {
+    content: ""; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, var(--rust) 0%, transparent 70%);
+    opacity: .15; filter: blur(20px);
+  }
+  .phone {
+    width: 240px; height: 480px; background: #FFF; border-radius: 38px;
+    margin: 0 auto; padding: 14px;
+    box-shadow:
+      0 0 0 1px rgba(31,27,22,.08),
+      0 24px 60px -20px rgba(31,27,22,.45);
+    position: relative;
+    border: 9px solid #1F1B16;
+    overflow: hidden;
+  }
+  .phone::before {
+    content: ""; position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 22px; background: #1F1B16; border-radius: 12px; z-index: 2;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border-radius: 26px; overflow: hidden;
+    background: #FFFCF6; padding: 38px 16px 16px;
+  }
+  .ps-head {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: "Inter", sans-serif; font-size: 10.5px; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .ps-head .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+  .ps-title {
+    font-family: "Newsreader", serif; font-style: italic;
+    font-size: 22px; line-height: 1.1; color: var(--ink);
+    margin: 12px 0 18px;
+  }
+  .med-item {
+    display: flex; align-items: center; gap: 10px;
+    background: #FFF; border-radius: 12px; padding: 10px 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(31,27,22,.04);
+    font-family: "Inter", sans-serif;
+  }
+  .med-icon {
+    width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .med-icon.a { background: #FDE7E0; color: var(--rust); }
+  .med-icon.b { background: #E0F2EE; color: var(--teal); }
+  .med-icon.c { background: #FFF3CF; color: #B58A1F; }
+  .med-meta { flex: 1; min-width: 0; }
+  .med-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .med-time { font-size: 10px; color: var(--muted); }
+  .med-check {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--hairline);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .med-check.done { background: var(--teal); border-color: var(--teal); color: white; font-size: 11px; }
+  .ps-foot {
+    margin-top: 14px; padding-top: 10px;
+    border-top: 1px dashed var(--hairline);
+    font-family: "Inter", sans-serif; font-size: 9.5px; color: var(--muted);
+    text-align: center;
+  }
+
+  /* sections */
+  section.block { padding: 88px 0; border-top: 1px solid var(--hairline); }
+  .section-label {
+    font-family: "Inter", sans-serif;
+    font-size: 11.5px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 24px;
+  }
+  h2 {
+    font-family: "Newsreader", serif; font-weight: 400;
+    font-size: clamp(34px, 3.6vw, 48px); line-height: 1.15;
+    letter-spacing: -0.015em; margin: 0 0 20px; max-width: 800px;
+  }
+  h2 em { font-style: italic; }
+  .col-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .col-pair p { font-size: 17px; line-height: 1.75; color: var(--muted); margin: 0 0 18px; }
+  .pullquote {
+    font-family: "Newsreader", serif; font-style: italic; font-weight: 400;
+    font-size: 28px; line-height: 1.4;
+    color: var(--ink); max-width: 760px;
+    border-left: 2px solid var(--rust); padding: 8px 0 8px 32px;
+    margin: 40px 0;
+  }
+
+  /* feature trio */
+  .trio {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+    margin-top: 56px;
+  }
+  .trio .step {
+    border-top: 1px solid var(--ink); padding-top: 20px;
+  }
+  .trio .step .num {
+    font-family: "Inter", sans-serif; font-size: 11px; letter-spacing: .2em;
+    color: var(--rust); margin-bottom: 14px; display: block;
+  }
+  .trio .step h3 {
+    font-family: "Newsreader", serif; font-weight: 500; font-size: 22px;
+    margin: 0 0 10px; letter-spacing: -0.01em;
+  }
+  .trio .step p {
+    font-size: 15px; color: var(--muted); margin: 0; line-height: 1.6;
+  }
+
+  /* download band */
+  .download-band {
+    background: var(--ink); color: var(--paper);
+    margin-top: 80px; padding: 88px 0;
+  }
+  .download-band .wrap { display: grid; grid-template-columns: 1.2fr .8fr; gap: 64px; align-items: center; }
+  .download-band h2 {
+    color: var(--paper);
+    font-family: "Newsreader", serif; font-style: italic; font-weight: 400;
+    font-size: clamp(36px, 3.8vw, 54px); margin: 0 0 16px;
+  }
+  .download-band p { font-size: 16px; color: rgba(248,244,237,.65); max-width: 480px; }
+  .download-band .btn-download { background: var(--paper); color: var(--ink); margin-top: 24px; }
+  .download-band .btn-download:hover { background: #FFF; }
+  .qr-block {
+    background: var(--paper); padding: 28px; border-radius: 20px;
+    display: flex; gap: 24px; align-items: center;
+  }
+  .qr-block img { width: 132px; height: 132px; display: block; image-rendering: pixelated; }
+  .qr-text { font-family: "Inter", sans-serif; font-size: 12px; color: var(--muted); }
+  .qr-text strong { display: block; color: var(--ink); font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+
+  /* care split */
+  .care-split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    margin-top: 64px;
+  }
+  .care-cell {
+    padding: 64px 56px;
+  }
+  .care-cell:first-child { border-right: 1px solid var(--hairline); background: rgba(184,92,61,.05); }
+  .care-cell:last-child { background: rgba(15,118,110,.05); }
+  .care-cell .role {
+    font-family: "Inter", sans-serif; font-size: 11px; letter-spacing: .25em;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .care-cell:first-child .role { color: var(--rust); }
+  .care-cell:last-child .role { color: var(--teal); }
+  .care-cell h3 {
+    font-family: "Newsreader", serif; font-style: italic; font-weight: 400;
+    font-size: 32px; margin: 0 0 16px; line-height: 1.2;
+  }
+  .care-cell p { font-size: 15px; color: var(--muted); margin: 0 0 12px; line-height: 1.7; }
+
+  footer {
+    padding: 56px 0 80px; color: var(--muted);
+    font-family: "Inter", sans-serif; font-size: 12.5px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer .right { display: flex; gap: 24px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 880px) {
+    .hero { grid-template-columns: 1fr; padding: 64px 0; }
+    .col-pair, .care-split, .download-band .wrap { grid-template-columns: 1fr; gap: 40px; }
+    .care-cell:first-child { border-right: 0; border-bottom: 1px solid var(--hairline); }
+    .trio { grid-template-columns: 1fr; }
+    .wrap { padding: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site wrap">
+  <a class="brand" href="#">
+    <img src="assets/icon.png" alt="" />
+    MedicationTracker
+  </a>
+  <div class="nav-links">
+    <a href="#story">理念</a>
+    <a href="#how">使用方式</a>
+    <a href="#download">下载</a>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div>
+    <div class="kicker">v0.1.0 · Android · 2026</div>
+    <h1>吃药不再<br/><em>是一个人的事。</em></h1>
+    <p class="lede">
+      一份被人牵挂着的服药记录。当你或你的家人开始一段漫长的服药周期，
+      这里有一个简单的方式：让关心你的人，每天看见你的打卡。
+    </p>
+    <div class="cta-row">
+      <a class="btn-download" href="http://114.215.177.111:5000/downloads/medication_tracker_rn_v0.1.0.apk" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+        下载 Android APK · 41 MB
+      </a>
+      <div class="meta-line">需 Android 8.0+</div>
+    </div>
+  </div>
+
+  <div class="phone-card">
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ps-head">
+          <span>11:24</span>
+          <span style="display:flex; gap:6px; align-items:center;"><span class="dot"></span> 在线</span>
+        </div>
+        <div class="ps-title">今日的<br/>三次胶囊</div>
+        <div class="med-item">
+          <div class="med-icon a">●</div>
+          <div class="med-meta">
+            <div class="med-name">降压药 · 苯磺酸氨氯地平</div>
+            <div class="med-time">08:00 · 早餐前</div>
+          </div>
+          <div class="med-check done">✓</div>
+        </div>
+        <div class="med-item">
+          <div class="med-icon b">●</div>
+          <div class="med-meta">
+            <div class="med-name">二甲双胍 · 0.5g</div>
+            <div class="med-time">13:00 · 午餐后</div>
+          </div>
+          <div class="med-check"></div>
+        </div>
+        <div class="med-item">
+          <div class="med-icon c">●</div>
+          <div class="med-meta">
+            <div class="med-name">阿托伐他汀 · 20mg</div>
+            <div class="med-time">21:30 · 睡前</div>
+          </div>
+          <div class="med-check"></div>
+        </div>
+        <div class="ps-foot">
+          本周依从率 <strong style="color:var(--teal);">92%</strong> · 已坚持 28 天
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="story">
+  <div class="wrap">
+    <div class="section-label">理念</div>
+    <div class="col-pair">
+      <div>
+        <h2><em>服药</em> 是一件孤独的小事。</h2>
+      </div>
+      <div>
+        <p>
+          一个小药盒，一张手写的时刻表，几本病历。日子久了，这些细节会被遗忘，
+          但身体不会忘记一次漏服、一份迟到的担忧。
+        </p>
+        <p>
+          我们没有把它做得复杂。MedicationTracker 只做三件事：
+          在对的时间提醒你、记下每一次打卡、让你在乎的人能远远地看一眼。
+        </p>
+      </div>
+    </div>
+
+    <blockquote class="pullquote">
+      "我妈每天早上八点要吃降压药。我不在家。我只是想知道她今天吃了没。"<br/>
+      <span style="font-size:14px; font-style:normal; color:var(--muted); font-family:Inter,sans-serif;">—— 一个不在父母身边的女儿</span>
+    </blockquote>
+  </div>
+</section>
+
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="section-label">使用方式</div>
+    <h2><em>三步</em>，把关心变成一个可看见的动作。</h2>
+
+    <div class="trio">
+      <div class="step">
+        <span class="num">I · 录入</span>
+        <h3>把你吃的药写下来</h3>
+        <p>支持自定义剂量、频次、服药时刻表。每一种药都有它自己的提醒方式。</p>
+      </div>
+      <div class="step">
+        <span class="num">II · 打卡</span>
+        <h3>打卡成为习惯</h3>
+        <p>按一下，打卡完成。漏服会记录原因，本周依从率自动生成。</p>
+      </div>
+      <div class="step">
+        <span class="num">III · 共享</span>
+        <h3>把记录分享给关心的人</h3>
+        <p>生成邀请码，对方添加后即可看到你今天的服药情况。无需注册账号的繁琐。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top: 32px;">
+  <div class="section-label">关系</div>
+  <h2 style="max-width:680px;">两个角色，<em>同一条记录</em>。</h2>
+
+  <div class="care-split">
+    <div class="care-cell">
+      <div class="role">— 服药者 · Care Receiver</div>
+      <h3>「爸妈看不见的时候，<br/>有人替我记着。」</h3>
+      <p>每日提醒，今日服药清单，依从率走势。一次设置，长期提醒。</p>
+      <p>当你漏服时，可以写下原因——身体不适、忘了、在忙。这些细节会被记录下来，
+        让关心你的人理解你漏服背后的语境，而不是简单一句"没吃"。</p>
+    </div>
+    <div class="care-cell">
+      <div class="role">— 关心者 · Care Giver</div>
+      <h3>「隔着一座城市，<br/>我看见她准时吃了药。」</h3>
+      <p>只需对方邀请码，即可添加关注。无需对方每天汇报，TA 的打卡会安静地推到你眼前。</p>
+      <p>漏服提醒会变成一次温柔的问候，而不是责备。把关心变成一种不打扰的节奏。</p>
+    </div>
+  </div>
+</section>
+
+<section class="download-band" id="download">
+  <div class="wrap">
+    <div>
+      <h2>装上 <em>药伴</em>，<br/>吃药，<br/>不再是一个人的事。</h2>
+      <p>41 MB · Android 8.0+ · 完全免费 · 无广告 · 无追踪</p>
+      <a class="btn-download" href="http://114.215.177.111:5000/downloads/medication_tracker_rn_v0.1.0.apk" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+        下载 APK
+      </a>
+      <div class="meta-line" style="margin-top:14px;">
+        或扫下方二维码 · sha256: <code>—</code>
+      </div>
+    </div>
+    <div class="qr-block">
+      <img src="assets/qr.png" alt="QR code" />
+      <div class="qr-text">
+        <strong>扫码下载</strong>
+        用手机相机<br/>对准二维码即可
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>© 2026 药伴 · v0.1.0 · build 100</div>
+  <div class="right">
+    <a href="https://lyssom.tech/medication/api/health">API</a>
+    <a href="#">Privacy</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

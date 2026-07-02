@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>药伴 · 吃药不再是一个人的事</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/icon.png" />
+<style>
+  :root {
+    --bg:        #FAFAF7;
+    --card:      #FFFFFF;
+    --ink:       #0A0A0A;
+    --muted:     #6B6B6B;
+    --hair:      rgba(10,10,10,.08);
+    --green:     #10B981;
+    --green-deep:#047857;
+    --warm:      #F5EFE6;
+    --rust:      #B85C3D;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 400; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+  /* nav */
+  nav.site {
+    padding: 22px 0; display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 16px; color: var(--ink); text-decoration: none;
+    letter-spacing: -.01em;
+  }
+  .brand img { width: 26px; height: 26px; }
+  nav .nav-links { display: flex; gap: 8px; }
+  nav .nav-links a {
+    font-size: 13.5px; color: var(--muted); text-decoration: none;
+    padding: 8px 14px; border-radius: 8px;
+    transition: background .2s, color .2s;
+  }
+  nav .nav-links a:hover { background: rgba(10,10,10,.05); color: var(--ink); }
+  nav .nav-cta {
+    font-size: 13.5px; color: var(--ink); text-decoration: none;
+    padding: 9px 16px; background: var(--ink); color: var(--bg);
+    border-radius: 8px; font-weight: 500;
+  }
+
+  /* bento grid */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    gap: 16px;
+    padding: 40px 0 80px;
+  }
+  .bento > * {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid var(--hair);
+    overflow: hidden;
+    position: relative;
+  }
+  .bento > .dark { background: var(--ink); color: var(--bg); border-color: transparent; }
+  .bento > .warm { background: var(--warm); border-color: transparent; }
+  .bento > .green { background: var(--green); color: #00261E; border-color: transparent; }
+
+  /* hero card - spans 4 cols / 3 rows */
+  .hero-card { grid-column: span 4; grid-row: span 3; padding: 40px; }
+  .hero-card .label {
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--green-deep); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-card .label::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 0 4px rgba(16,185,129,.18);
+  }
+  .hero-card h1 {
+    font-size: clamp(40px, 4.6vw, 64px); font-weight: 700;
+    line-height: 1.04; letter-spacing: -.03em; margin: 0 0 24px;
+  }
+  .hero-card h1 em {
+    font-style: normal; font-weight: 500;
+    background: linear-gradient(transparent 65%, rgba(184,92,61,.4) 65%);
+    padding: 0 4px;
+  }
+  .hero-card .lede {
+    font-size: 17px; color: var(--muted); line-height: 1.6;
+    max-width: 520px; margin: 0 0 32px;
+  }
+  .hero-card .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .btn-dl {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; background: var(--ink); color: var(--bg);
+    font-size: 14px; font-weight: 500; text-decoration: none;
+    border-radius: 10px; transition: transform .2s, background .2s;
+  }
+  .btn-dl:hover { background: #000; transform: translateY(-1px); }
+  .btn-dl svg { width: 16px; height: 16px; }
+  .btn-ghost {
+    padding: 14px 18px; font-size: 13.5px; color: var(--muted);
+    text-decoration: none; border-radius: 10px; font-weight: 500;
+    border: 1px solid var(--hair); background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* app preview card - right */
+  .preview-card { grid-column: span 2; grid-row: span 3; padding: 24px; }
+  .preview-card .label {
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .preview-card .label .live {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 0 3px rgba(16,185,129,.2);
+  }
+  .mini-phone {
+    width: 100%; max-width: 200px; aspect-ratio: 1/2;
+    margin: 16px auto 0;
+    background: #FCFAF5; border-radius: 28px;
+    border: 7px solid var(--ink);
+    overflow: hidden; position: relative;
+    box-shadow: 0 14px 36px -12px rgba(10,10,10,.3);
+  }
+  .mini-phone::before {
+    content: ""; position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+    width: 56px; height: 14px; background: var(--ink); border-radius: 8px; z-index: 2;
+  }
+  .mp-inner { padding: 30px 10px 12px; height: 100%; display: flex; flex-direction: column; }
+  .mp-head {
+    font-family: "Inter", sans-serif;
+    display: flex; justify-content: space-between;
+    font-size: 8.5px; color: var(--muted); margin-bottom: 12px;
+  }
+  .mp-greet {
+    font-size: 18px; font-weight: 600; letter-spacing: -.02em;
+    line-height: 1.1; margin-bottom: 4px;
+  }
+  .mp-sub { font-size: 9.5px; color: var(--muted); margin-bottom: 12px; }
+  .mp-card {
+    background: #FFF; border-radius: 10px; padding: 9px 10px;
+    margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .mp-icon {
+    width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+    font-size: 11px; flex-shrink: 0;
+  }
+  .mp-icon.a { background: #FEE6DC; color: var(--rust); }
+  .mp-icon.b { background: #D1F1E5; color: var(--green-deep); }
+  .mp-icon.c { background: #FFF0CC; color: #B58A1F; }
+  .mp-meta { flex: 1; min-width: 0; }
+  .mp-name { font-size: 9px; font-weight: 600; }
+  .mp-time { font-size: 7.5px; color: var(--muted); }
+  .mp-tick {
+    width: 16px; height: 16px; border-radius: 50%; border: 1.2px solid #DDD;
+    flex-shrink: 0; font-size: 9px; display: grid; place-items: center;
+  }
+  .mp-tick.done { background: var(--green); border-color: var(--green); color: #FFF; }
+
+  /* care card - spans 3 */
+  .care-card { grid-column: span 3; grid-row: span 2; }
+  .care-card .label {
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .care-card .label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .care-card h3 {
+    font-size: 24px; font-weight: 600; letter-spacing: -.02em;
+    margin: 0 0 16px; line-height: 1.25; color: #FFF;
+  }
+  .care-card p { font-size: 14px; color: rgba(255,255,255,.7); max-width: 340px; line-height: 1.65; }
+  .care-flow {
+    display: flex; align-items: center; gap: 8px; margin-top: 24px;
+    font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+    color: rgba(255,255,255,.85);
+  }
+  .care-flow .pill {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px; padding: 5px 10px;
+  }
+  .care-flow .arrow { color: var(--green); font-weight: 600; }
+
+  /* stats card */
+  .stat-card { grid-column: span 3; grid-row: span 2; }
+  .stat-card .label {
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .stat-tile {
+    background: var(--warm); border-radius: 14px; padding: 18px 16px;
+  }
+  .stat-num {
+    font-family: "Inter", sans-serif;
+    font-size: 36px; font-weight: 700; letter-spacing: -.03em;
+    margin-bottom: 4px; color: var(--ink);
+  }
+  .stat-num small { font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 3px; }
+  .stat-lbl { font-size: 12.5px; color: var(--muted); }
+
+  /* 3 small feature cards */
+  .feat-card { grid-column: span 2; grid-row: span 2; }
+  .feat-card .feat-ico {
+    width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+    margin-bottom: 16px; font-size: 18px;
+  }
+  .feat-card.a .feat-ico { background: #D1F1E5; color: var(--green-deep); }
+  .feat-card.b .feat-ico { background: #FEE6DC; color: var(--rust); }
+  .feat-card.c .feat-ico { background: #E8E1F5; color: #6B4DA6; }
+  .feat-card h3 {
+    font-size: 17px; font-weight: 600; margin: 0 0 8px; letter-spacing: -.01em;
+  }
+  .feat-card p { font-size: 13.5px; color: var(--muted); margin: 0; line-height: 1.55; }
+
+  /* feature row card  */
+  .row-card { grid-column: span 6; grid-row: span 1; padding: 24px 28px; display: flex; align-items: center; gap: 24px; min-height: 100px; }
+  .row-card .step {
+    display: flex; align-items: center; gap: 14px;
+    flex: 1; padding: 0 14px; border-left: 1px solid var(--hair);
+  }
+  .row-card .step:first-child { border-left: 0; padding-left: 0; }
+  .row-card .num {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--green-deep);
+    background: rgba(16,185,129,.12); padding: 4px 8px; border-radius: 5px; font-weight: 600;
+  }
+  .row-card .step h4 { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+  .row-card .step p { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+  /* download bento */
+  .dl-bento {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;
+    padding: 0 0 80px;
+  }
+  .dl-bento > * {
+    background: var(--card); border-radius: 20px; padding: 28px;
+    border: 1px solid var(--hair);
+  }
+  .dl-main {
+    background: var(--ink); color: #FFF; border-color: transparent;
+    padding: 36px; display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 240px;
+  }
+  .dl-main h2 {
+    font-size: 32px; font-weight: 700; letter-spacing: -.025em;
+    margin: 0 0 12px; line-height: 1.15;
+  }
+  .dl-main h2 em { font-style: normal; font-weight: 400; color: var(--green); }
+  .dl-main p { font-size: 13.5px; color: rgba(255,255,255,.55); margin: 0 0 24px; }
+  .dl-main .file-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px; padding: 12px 16px; font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+  }
+  .dl-main .file-row .ver { color: rgba(255,255,255,.7); }
+  .dl-main .file-row a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+  .dl-side {
+    padding: 24px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center; gap: 12px;
+  }
+  .dl-side img { width: 100px; height: 100px; image-rendering: pixelated; border-radius: 6px; }
+  .dl-side h4 { font-size: 14px; font-weight: 600; margin: 0; }
+  .dl-side p { font-size: 12px; color: var(--muted); margin: 0; }
+
+  .dl-spec { padding: 24px; }
+  .dl-spec .row {
+    display: flex; justify-content: space-between; padding: 10px 0;
+    border-bottom: 1px dashed var(--hair); font-size: 13px;
+  }
+  .dl-spec .row:last-child { border-bottom: 0; }
+  .dl-spec .row span:first-child { color: var(--muted); }
+  .dl-spec .row span:last-child { font-family: "JetBrains Mono", monospace; font-weight: 500; }
+
+  footer {
+    padding: 36px 0 56px; display: flex; justify-content: space-between;
+    border-top: 1px solid var(--hair); margin-top: 40px;
+    font-size: 12.5px; color: var(--muted);
+  }
+  footer .right { display: flex; gap: 20px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 1024px) {
+    .bento { grid-template-columns: repeat(4, 1fr); }
+    .hero-card, .preview-card, .care-card, .stat-card, .feat-card, .row-card { grid-column: span 4; grid-row: auto; }
+    .dl-bento { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .bento { grid-template-columns: 1fr; }
+    .hero-card, .preview-card, .care-card, .stat-card, .feat-card, .row-card { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site wrap">
+  <a class="brand" href="#">
+    <img src="assets/icon.png" alt="" />
+    MedicationTracker
+  </a>
+  <div class="nav-links">
+    <a href="#features">功能</a>
+    <a href="#how">流程</a>
+    <a href="#download">下载</a>
+  </div>
+  <a class="nav-cta" href="#download">下载</a>
+</nav>
+
+<div class="wrap">
+  <div class="bento" id="features">
+
+    <!-- HERO -->
+    <div class="hero-card">
+      <div class="label">v0.1.0 · Android</div>
+      <h1>吃药不再<br/><em>是一个人的事。</em></h1>
+      <p class="lede">
+        让家人每天都能看到你的打卡。记录每一次服药，分享给那些关心你的人。
+        给慢性病服药周期一个温柔的工具，给不在身边的关心一条细线。
+      </p>
+      <div class="actions">
+        <a class="btn-dl" href="http://114.215.177.111:5000/downloads/medication_tracker_rn_v0.1.0.apk" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+          下载 APK · 41 MB
+        </a>
+        <a class="btn-ghost" href="#how">查看流程</a>
+      </div>
+    </div>
+
+    <!-- phone preview -->
+    <div class="preview-card">
+      <div class="label"><span class="live"></span>今日服药</div>
+      <div class="mini-phone">
+        <div class="mp-inner">
+          <div class="mp-head">
+            <span>11:24</span>
+            <span>● 在线</span>
+          </div>
+          <div class="mp-greet">今日 3 次</div>
+          <div class="mp-sub">本周依从 92%</div>
+          <div class="mp-card">
+            <div class="mp-icon a">●</div>
+            <div class="mp-meta">
+              <div class="mp-name">降压药</div>
+              <div class="mp-time">08:00</div>
+            </div>
+            <div class="mp-tick done">✓</div>
+          </div>
+          <div class="mp-card">
+            <div class="mp-icon b">●</div>
+            <div class="mp-meta">
+              <div class="mp-name">二甲双胍</div>
+              <div class="mp-time">13:00</div>
+            </div>
+            <div class="mp-tick"></div>
+          </div>
+          <div class="mp-card">
+            <div class="mp-icon c">●</div>
+            <div class="mp-meta">
+              <div class="mp-name">阿托伐他汀</div>
+              <div class="mp-time">21:30</div>
+            </div>
+            <div class="mp-tick"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- care relationship -->
+    <div class="care-card dark">
+      <div class="label">关系</div>
+      <h3>两个角色，同一份记录。<br/>一条邀请码，零注册。</h3>
+      <p>服药者录入与打卡。关心者远程查看今日服药、接收漏服提示。</p>
+      <div class="care-flow">
+        <span class="pill">A · 邀请码</span>
+        <span class="arrow">→</span>
+        <span class="pill">B · 添加关注</span>
+        <span class="arrow">→</span>
+        <span class="pill">日常推送</span>
+      </div>
+    </div>
+
+    <!-- stats -->
+    <div class="stat-card">
+      <div class="label">数据快照</div>
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="stat-num">7<small>天</small></div>
+          <div class="stat-lbl">平均坚持周期</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num">28<small>天</small></div>
+          <div class="stat-lbl">最长连续打卡</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num">92<small>%</small></div>
+          <div class="stat-lbl">本周依从率</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num">3<small>人</small></div>
+          <div class="stat-lbl">最多关心者</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 features -->
+    <div class="feat-card a">
+      <div class="feat-ico">⏰</div>
+      <h3>准时提醒</h3>
+      <p>每种药独立的提醒时刻表，错峰不打扰。你漏掉的那次，应用会替你记下来原因。</p>
+    </div>
+    <div class="feat-card b">
+      <div class="feat-ico">♥</div>
+      <h3>关系可分享</h3>
+      <p>生成的邀请码，对方一键添加。不需要 TA 也记住账号密码这种麻烦事。</p>
+    </div>
+    <div class="feat-card c">
+      <div class="feat-ico">🛡</div>
+      <h3>隐私优先</h3>
+      <p>只记录服药与漏服的事实，不收集你的位置、不做画像、不与第三方共享。</p>
+    </div>
+
+    <!-- 3 step flow row -->
+    <div class="row-card" id="how">
+      <div class="step">
+        <div class="num">01</div>
+        <div>
+          <h4>录入药品</h4>
+          <p>支持任意剂量与频次</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <div>
+          <h4>每天打卡</h4>
+          <p>漏服可记录原因</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <div>
+          <h4>分享给家人</h4>
+          <p>邀请码零注册</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <div>
+          <h4>远程查看</h4>
+          <p>关心者收到当日清单</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="download">
+  <div class="dl-bento">
+    <div class="dl-main">
+      <div>
+        <h2>装上 <em>药伴</em>，<br/>吃药，<br/>不再是一个人的事。</h2>
+        <p>Android 8.0+ · 完全免费 · 无广告 · 无追踪</p>
+      </div>
+      <div class="file-row">
+        <span class="ver">medication_tracker_rn_v0.1.0.apk · 41 MB</span>
+        <a href="http://114.215.177.111:5000/downloads/medication_tracker_rn_v0.1.0.apk" download>下载 →</a>
+      </div>
+    </div>
+    <div class="dl-side">
+      <img src="assets/qr.png" alt="QR code" />
+      <h4>扫码下载</h4>
+      <p>手机相机对准即可</p>
+    </div>
+    <div class="dl-spec">
+      <div class="row"><span>版本</span><span>v0.1.0 · build 100</span></div>
+      <div class="row"><span>发布日期</span><span>2026-07-01</span></div>
+      <div class="row"><span>包名</span><span>com.lyssom.medicationtrackerrn</span></div>
+      <div class="row"><span>大小</span><span>41 MB</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 药伴 · lyssom.tech/medication</div>
+    <div class="right">
+      <a href="https://lyssom.tech/medication/api/health">API 状态</a>
+      <a href="#">隐私</a>
+      <a href="#">关于</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
