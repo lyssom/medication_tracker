@@ -1,20 +1,31 @@
 import { useState } from 'react'
-import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Alert, Platform } from 'react-native'
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useMedStore } from '../../src/store/useMedStore'
+import { haptics } from '../../src/utils/haptics'
 
 type RepeatKind = 'daily' | 'weekdays' | 'custom'
 
 interface ScheduleEntry {
   id: number
-  time: string // HH:MM
+  time: string
   repeat: RepeatKind
-  days: number[] // 0=日,1=一,...,6=六; 仅 custom 用
+  days: number[]
 }
 
-const DEFAULT_DAYS = [1, 2, 3, 4, 5] // 一-五
+const DEFAULT_DAYS = [1, 2, 3, 4, 5]
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6]
 const DAY_LABELS = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -48,6 +59,7 @@ export default function AddMedScreen() {
   const [sub, setSub] = useState(false)
 
   const openTimePicker = (id: number) => {
+    haptics.light()
     setPickerTarget(id)
     setPickerOpen(true)
   }
@@ -63,15 +75,18 @@ export default function AddMedScreen() {
   }
 
   const addRow = () => {
+    haptics.medium()
     setSchedule((s) => [
       ...s,
       { id: nextId++, time: '12:00', repeat: 'daily', days: [] },
     ])
   }
   const removeRow = (id: number) => {
+    haptics.warn()
     setSchedule((s) => s.filter((e) => e.id !== id))
   }
   const setRowRepeat = (id: number, repeat: RepeatKind) => {
+    haptics.light()
     setSchedule((s) =>
       s.map((e) =>
         e.id === id ? { ...e, repeat, days: daysForRepeat(repeat, e.days) } : e
@@ -79,6 +94,7 @@ export default function AddMedScreen() {
     )
   }
   const toggleDay = (id: number, day: number) => {
+    haptics.light()
     setSchedule((s) =>
       s.map((e) => {
         if (e.id !== id) return e
@@ -92,12 +108,15 @@ export default function AddMedScreen() {
   }
 
   const submit = async () => {
+    haptics.medium()
     if (!name.trim()) {
       setErr('药物名称不能为空')
+      haptics.warn()
       return
     }
     if (schedule.length === 0) {
       setErr('至少添加一个服药时间')
+      haptics.warn()
       return
     }
     setSub(true)
@@ -111,8 +130,10 @@ export default function AddMedScreen() {
         alias: alias.trim() || null,
         times,
       })
+      haptics.success()
       router.back()
     } catch (e: any) {
+      haptics.warn()
       Alert.alert('保存失败', e?.message ?? '未知错误')
       setErr(e?.message ?? '保存失败')
     } finally {
@@ -123,136 +144,177 @@ export default function AddMedScreen() {
   const pickerEntry = schedule.find((e) => e.id === pickerTarget)
 
   return (
-    <ScrollView className="flex-1 bg-gray-50" keyboardShouldPersistTaps="handled">
-      <View className="p-5">
-        <View className="mb-5">
-          <Text className="text-2xl font-bold text-gray-900">添加药物</Text>
-          <Text className="text-sm text-gray-500 mt-1">填写下方信息后保存</Text>
-        </View>
-
-        <View className="bg-white rounded-2xl p-5 border border-gray-100 gap-5">
-          {/* Name */}
-          <View>
-            <Text className="text-sm font-medium text-gray-700 mb-2">药物名称 *</Text>
-            <TextInput
-              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-gray-50"
-              placeholder="如：阿莫西林"
-              value={name}
-              onChangeText={setName}
-              placeholderTextColor="#9CA3AF"
-            />
+    <KeyboardAvoidingView
+      className="flex-1 bg-background dark:bg-slate-900"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 96 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="p-5">
+          <View className="mb-5">
+            <Text className="text-2xl font-bold text-ink dark:text-slate-100">添加药物</Text>
+            <Text className="text-sm text-ink-muted dark:text-slate-400 mt-1">
+              填写下方信息后保存
+            </Text>
           </View>
 
-          {/* Alias */}
-          <View>
-            <Text className="text-sm font-medium text-gray-700 mb-2">别名 / 品牌</Text>
-            <TextInput
-              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-gray-50"
-              placeholder="选填"
-              value={alias}
-              onChangeText={setAlias}
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          {/* Schedule */}
-          <View>
-            <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-sm font-medium text-gray-700">服药时间 *</Text>
-              <Pressable onPress={addRow} className="px-3 py-1 rounded-full bg-emerald-50 active:bg-emerald-100">
-                <Text className="text-emerald-600 text-sm font-semibold">+ 添加</Text>
-              </Pressable>
+          <View className="bg-surface dark:bg-slate-800 rounded-2xl p-5 border border-border dark:border-slate-700 gap-5">
+            <View>
+              <Text className="text-sm font-medium text-ink dark:text-slate-200 mb-2">
+                药物名称 <Text className="text-danger">*</Text>
+              </Text>
+              <TextInput
+                className="border border-border dark:border-slate-600 rounded-xl px-4 py-3 text-base bg-background dark:bg-slate-900 text-ink dark:text-slate-100"
+                placeholder="如：阿莫西林"
+                value={name}
+                onChangeText={setName}
+                placeholderTextColor="#9CA3AF"
+              />
             </View>
 
-            {schedule.map((e, i) => (
-              <View
-                key={e.id}
-                className={`rounded-xl border border-gray-100 bg-gray-50 p-4 ${i > 0 ? 'mt-3' : ''}`}
-              >
-                <View className="flex-row items-center justify-between mb-3">
-                  <Pressable
-                    onPress={() => openTimePicker(e.id)}
-                    className="bg-white border border-emerald-200 rounded-xl px-4 py-2 active:bg-emerald-50"
-                  >
-                    <Text className="text-emerald-600 text-2xl font-bold tracking-tight">{e.time}</Text>
-                  </Pressable>
-                  {schedule.length > 1 && (
-                    <Pressable onPress={() => removeRow(e.id)} className="w-8 h-8 items-center justify-center rounded-full bg-danger-soft active:bg-rose-100">
-                      <Ionicons name="close" size={18} color="#F43F5E" />
+            <View>
+              <Text className="text-sm font-medium text-ink dark:text-slate-200 mb-2">
+                别名 / 品牌
+              </Text>
+              <TextInput
+                className="border border-border dark:border-slate-600 rounded-xl px-4 py-3 text-base bg-background dark:bg-slate-900 text-ink dark:text-slate-100"
+                placeholder="选填"
+                value={alias}
+                onChangeText={setAlias}
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+
+            <View>
+              <View className="flex-row items-center justify-between mb-3">
+                <Text className="text-sm font-medium text-ink dark:text-slate-200">
+                  服药时间 <Text className="text-danger">*</Text>
+                </Text>
+                <Pressable
+                  onPress={addRow}
+                  className="px-3 py-1 rounded-full bg-primary-soft dark:bg-emerald-900/40 active:bg-primary-soft/80"
+                >
+                  <Text className="text-primary dark:text-emerald-400 text-sm font-semibold">+ 添加</Text>
+                </Pressable>
+              </View>
+
+              {schedule.map((e, i) => (
+                <View
+                  key={e.id}
+                  className={`rounded-xl border border-border dark:border-slate-600 bg-background dark:bg-slate-900 p-4 ${i > 0 ? 'mt-3' : ''}`}
+                >
+                  <View className="flex-row items-center justify-between mb-3">
+                    <Pressable
+                      onPress={() => openTimePicker(e.id)}
+                      className="bg-surface dark:bg-slate-800 border border-primary/40 rounded-xl px-4 py-2 active:bg-primary-soft"
+                    >
+                      <Text className="text-primary dark:text-emerald-400 text-2xl font-bold tracking-tight">
+                        {e.time}
+                      </Text>
                     </Pressable>
-                  )}
-                </View>
-
-                {/* Repeat chips */}
-                <View className="flex-row gap-2 mb-3">
-                  {(['daily', 'weekdays', 'custom'] as RepeatKind[]).map((r) => {
-                    const active = e.repeat === r
-                    return (
+                    {schedule.length > 1 && (
                       <Pressable
-                        key={r}
-                        onPress={() => setRowRepeat(e.id, r)}
-                        className={`flex-1 rounded-lg py-2 items-center ${
-                          active ? 'bg-emerald-500' : 'bg-white border border-gray-200'
-                        }`}
+                        onPress={() => removeRow(e.id)}
+                        className="w-9 h-9 items-center justify-center rounded-full bg-danger-soft active:bg-rose-100"
                       >
-                        <Text className={`text-sm font-medium ${active ? 'text-white' : 'text-gray-600'}`}>
-                          {r === 'daily' ? '每天' : r === 'weekdays' ? '工作日' : '自定义'}
-                        </Text>
+                        <Ionicons name="close" size={20} color="#F43F5E" />
                       </Pressable>
-                    )
-                  })}
-                </View>
+                    )}
+                  </View>
 
-                {/* Day chips for custom */}
-                {e.repeat === 'custom' && (
-                  <View className="flex-row gap-1.5">
-                    {ALL_DAYS.map((d) => {
-                      const active = e.days.includes(d)
+                  <View className="flex-row gap-2 mb-3">
+                    {(['daily', 'weekdays', 'custom'] as RepeatKind[]).map((r) => {
+                      const active = e.repeat === r
                       return (
                         <Pressable
-                          key={d}
-                          onPress={() => toggleDay(e.id, d)}
-                          className={`flex-1 rounded-md py-1.5 items-center ${
-                            active ? 'bg-emerald-500' : 'bg-white border border-gray-200'
+                          key={r}
+                          onPress={() => setRowRepeat(e.id, r)}
+                          className={`flex-1 rounded-lg py-2 items-center active:scale-95 ${
+                            active
+                              ? 'bg-primary'
+                              : 'bg-surface dark:bg-slate-800 border border-border dark:border-slate-600'
                           }`}
                         >
-                          <Text className={`text-xs font-medium ${active ? 'text-white' : 'text-gray-500'}`}>
-                            {DAY_LABELS[d]}
+                          <Text
+                            className={`text-sm font-medium ${
+                              active
+                                ? 'text-white'
+                                : 'text-ink-muted dark:text-slate-400'
+                            }`}
+                          >
+                            {r === 'daily' ? '每天' : r === 'weekdays' ? '工作日' : '自定义'}
                           </Text>
                         </Pressable>
                       )
                     })}
                   </View>
-                )}
 
-                {e.repeat !== 'daily' && (
-                  <Text className="text-xs text-gray-400 mt-2">
-                    → {repeatLabel(e.repeat, e.days)}
-                  </Text>
-                )}
-              </View>
-            ))}
+                  {e.repeat === 'custom' && (
+                    <View className="flex-row gap-1.5">
+                      {ALL_DAYS.map((d) => {
+                        const active = e.days.includes(d)
+                        return (
+                          <Pressable
+                            key={d}
+                            onPress={() => toggleDay(e.id, d)}
+                            className={`flex-1 rounded-md py-1.5 items-center active:scale-95 ${
+                              active
+                                ? 'bg-primary'
+                                : 'bg-surface dark:bg-slate-800 border border-border dark:border-slate-600'
+                            }`}
+                          >
+                            <Text
+                              className={`text-xs font-medium ${
+                                active ? 'text-white' : 'text-ink-muted dark:text-slate-400'
+                              }`}
+                            >
+                              {DAY_LABELS[d]}
+                            </Text>
+                          </Pressable>
+                        )
+                      })}
+                    </View>
+                  )}
+
+                  {e.repeat !== 'daily' && (
+                    <Text className="text-xs text-ink-faint dark:text-slate-500 mt-2">
+                      → {repeatLabel(e.repeat, e.days)}
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
+
+            {err ? (
+              <Text className="text-danger text-sm text-center">{err}</Text>
+            ) : null}
+
+            <Pressable
+              onPress={submit}
+              disabled={sub}
+              className={`bg-primary rounded-xl py-4 items-center active:bg-primary-hover active:scale-95 shadow-warm-sm ${
+                sub ? 'opacity-60' : ''
+              }`}
+            >
+              {sub ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text className="text-white font-semibold text-base">保存</Text>
+              )}
+            </Pressable>
+
+            <Pressable
+              onPress={() => router.back()}
+              className="rounded-xl py-3 items-center active:opacity-70"
+            >
+              <Text className="text-ink-muted dark:text-slate-400 text-sm">取消</Text>
+            </Pressable>
           </View>
-
-          {err ? <Text className="text-red-500 text-sm text-center">{err}</Text> : null}
-
-          <Pressable
-            onPress={submit}
-            disabled={sub}
-            className={`bg-emerald-500 rounded-xl py-4 items-center active:bg-emerald-600 ${sub ? 'opacity-60' : ''}`}
-          >
-            {sub ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text className="text-white font-semibold text-base">保存</Text>
-            )}
-          </Pressable>
-
-          <Pressable onPress={() => router.back()} className="rounded-xl py-3 items-center">
-            <Text className="text-gray-500 text-sm">取消</Text>
-          </Pressable>
         </View>
-      </View>
+      </ScrollView>
 
       {pickerOpen && pickerEntry && (
         <DateTimePicker
@@ -268,6 +330,6 @@ export default function AddMedScreen() {
           onChange={onTimeChange}
         />
       )}
-    </ScrollView>
+    </KeyboardAvoidingView>
   )
 }

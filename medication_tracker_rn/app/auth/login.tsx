@@ -7,10 +7,12 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthStore } from '../../src/store/useAuthStore'
+import { haptics } from '../../src/utils/haptics'
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -23,6 +25,7 @@ export default function LoginScreen() {
   const [showPw, setShowPw] = useState(false)
 
   const submit = async () => {
+    haptics.medium()
     setErr('')
     if (!username.trim()) {
       setErr('请输入用户名')
@@ -38,36 +41,44 @@ export default function LoginScreen() {
       } else {
         await login({ username: username.trim(), password: password.trim() })
       }
+      haptics.success()
       router.replace('/(tabs)')
     } catch (e: any) {
+      haptics.warn()
       setErr(e?.message ?? '操作失败')
     }
   }
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-background dark:bg-slate-900"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View className="flex-1 justify-center px-6">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Logo + title */}
         <View className="items-center mb-8">
-          <View className="w-24 h-24 rounded-full bg-primary-soft items-center justify-center mb-4 shadow-warm-sm">
+          <View className="w-24 h-24 rounded-full bg-primary-soft dark:bg-emerald-900/40 items-center justify-center mb-4 shadow-warm-sm">
             <Ionicons name="medkit" size={48} color="#10B981" />
           </View>
-          <Text className="text-3xl font-bold text-primary">药伴</Text>
-          <Text className="text-base text-ink-muted mt-1">吃药不再是一个人的事</Text>
+          <Text className="text-3xl font-bold text-primary dark:text-emerald-400">药伴</Text>
+          <Text className="text-base text-ink-muted dark:text-slate-400 mt-1">
+            吃药不再是一个人的事
+          </Text>
         </View>
 
         {/* Form card */}
-        <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <Text className="text-xl font-semibold text-center mb-6">
+        <View className="bg-surface dark:bg-slate-800 rounded-2xl p-6 shadow-warm-sm border border-border dark:border-slate-700">
+          <Text className="text-xl font-semibold text-center mb-6 text-ink dark:text-slate-100">
             {mode === 'register' ? '创建账户' : '欢迎回来'}
           </Text>
 
+          <Text className="text-sm font-medium text-ink dark:text-slate-200 mb-1.5">用户名</Text>
           <TextInput
-            className="border border-gray-200 rounded-xl px-4 py-3 mb-3 text-base bg-gray-50"
-            placeholder="用户名"
+            className="border border-border dark:border-slate-600 rounded-xl px-4 py-3 mb-4 text-base bg-background dark:bg-slate-900 text-ink dark:text-slate-100"
+            placeholder="请输入用户名"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
@@ -75,36 +86,58 @@ export default function LoginScreen() {
             placeholderTextColor="#9CA3AF"
           />
 
-          <TextInput
-            className="border border-gray-200 rounded-xl px-4 py-3 mb-3 text-base bg-gray-50"
-            placeholder="密码"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPw}
-            autoCapitalize="none"
-            autoCorrect={false}
-            placeholderTextColor="#9CA3AF"
-          />
-
-          {mode === 'register' && (
+          <Text className="text-sm font-medium text-ink dark:text-slate-200 mb-1.5">密码</Text>
+          <View className="relative">
             <TextInput
-              className="border border-gray-200 rounded-xl px-4 py-3 mb-3 text-base bg-gray-50"
-              placeholder="邀请码"
-              value={invitation}
-              onChangeText={setInvitation}
-              autoCapitalize="characters"
+              className="border border-border dark:border-slate-600 rounded-xl px-4 py-3 pr-12 mb-4 text-base bg-background dark:bg-slate-900 text-ink dark:text-slate-100"
+              placeholder="请输入密码"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPw}
+              autoCapitalize="none"
+              autoCorrect={false}
               placeholderTextColor="#9CA3AF"
             />
+            <Pressable
+              onPress={() => {
+                haptics.light()
+                setShowPw(!showPw)
+              }}
+              hitSlop={10}
+              className="absolute right-3 top-3 w-8 h-8 items-center justify-center"
+            >
+              <Ionicons
+                name={showPw ? 'eye-off-outline' : 'eye-outline'}
+                size={20}
+                color="#6B7280"
+              />
+            </Pressable>
+          </View>
+
+          {mode === 'register' && (
+            <>
+              <Text className="text-sm font-medium text-ink dark:text-slate-200 mb-1.5">
+                邀请码 <Text className="text-ink-faint font-normal">(选填)</Text>
+              </Text>
+              <TextInput
+                className="border border-border dark:border-slate-600 rounded-xl px-4 py-3 mb-4 text-base bg-background dark:bg-slate-900 text-ink dark:text-slate-100"
+                placeholder="如：ABC123"
+                value={invitation}
+                onChangeText={setInvitation}
+                autoCapitalize="characters"
+                placeholderTextColor="#9CA3AF"
+              />
+            </>
           )}
 
           {err ? (
-            <Text className="text-red-500 text-sm text-center mb-3">{err}</Text>
+            <Text className="text-danger text-sm text-center mb-3">{err}</Text>
           ) : null}
 
           <Pressable
             onPress={submit}
             disabled={isLoading}
-            className={`bg-emerald-500 rounded-xl py-3.5 items-center mt-2 active:bg-emerald-600 ${
+            className={`bg-primary rounded-xl py-3.5 items-center mt-2 active:bg-primary-hover active:scale-95 shadow-warm-sm ${
               isLoading ? 'opacity-60' : ''
             }`}
           >
@@ -119,22 +152,23 @@ export default function LoginScreen() {
 
           <Pressable
             onPress={() => {
+              haptics.light()
               setMode(mode === 'register' ? 'login' : 'register')
               setErr('')
               setInvitation('')
             }}
-            className="items-center mt-4"
+            className="items-center mt-4 active:opacity-70"
           >
-            <Text className="text-emerald-500 text-sm">
+            <Text className="text-primary text-sm">
               {mode === 'register' ? '已有账户？点击登录' : '没有账户？点击注册'}
             </Text>
           </Pressable>
         </View>
 
-        <Text className="text-center text-xs text-gray-400 mt-6">
+        <Text className="text-center text-xs text-ink-faint dark:text-slate-500 mt-6">
           {mode === 'register' ? '注册即表示您同意我们的服务条款' : '登录后可以管理药物并开启打卡'}
         </Text>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   )
 }
