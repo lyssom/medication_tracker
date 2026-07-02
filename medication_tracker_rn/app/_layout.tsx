@@ -3,6 +3,23 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { View, ActivityIndicator } from 'react-native'
+import { useFonts } from 'expo-font'
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from '@expo-google-fonts/plus-jakarta-sans'
+import {
+  NotoSerifSC_400Regular,
+  NotoSerifSC_700Bold,
+} from '@expo-google-fonts/noto-serif-sc'
 import { useAuthStore } from '../src/store/useAuthStore'
 import { useVersionStore } from '../src/store/useVersionStore'
 import { useThemeStore } from '../src/store/useThemeStore'
@@ -21,6 +38,19 @@ export default function RootLayout() {
   const mode = useThemeStore((s) => s.mode)
   const hydrateFromSystem = useThemeStore((s) => s.hydrateFromSystem)
 
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    NotoSerifSC_400Regular,
+    NotoSerifSC_700Bold,
+  })
+
   useEffect(() => {
     if (!hasHydrated) return
     if (accessToken) {
@@ -36,13 +66,9 @@ export default function RootLayout() {
     hydrateFromSystem()
   }, [mode, hydrateFromSystem])
 
-  if (!hasHydrated) {
+  if (!hasHydrated || !fontsLoaded) {
     return (
-      <View
-        className={`flex-1 justify-center items-center bg-background dark:bg-slate-900 ${
-          effective === 'dark' ? 'dark' : ''
-        }`}
-      >
+      <View className="flex-1 justify-center items-center bg-background">
         <ActivityIndicator size="large" color="#10B981" />
       </View>
     )

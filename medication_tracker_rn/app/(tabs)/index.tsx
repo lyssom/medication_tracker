@@ -91,7 +91,9 @@ export default function HomeScreen() {
     >
       <View className="mb-4">
         <Text className="text-sm text-ink-muted dark:text-slate-400">早上好</Text>
-        <Text className="text-2xl font-bold text-ink dark:text-slate-100 mt-1">今日服药</Text>
+        <Text className="text-2xl font-display font-bold text-ink dark:text-slate-100 mt-1">
+          今日服药
+        </Text>
       </View>
 
       {/* Hero card */}
@@ -107,7 +109,7 @@ export default function HomeScreen() {
         ) : next ? (
           <>
             <Text className="text-white/90 text-sm font-semibold">下一服药</Text>
-            <Text className="text-white text-5xl font-bold mt-2 tracking-tight">
+            <Text className="text-white text-5xl font-display font-extrabold mt-2 tracking-tight">
               {next.scheduled_time}
             </Text>
             <View className="mt-3 h-px bg-white/25" />
@@ -125,7 +127,7 @@ export default function HomeScreen() {
         ) : plans.length > 0 ? (
           <>
             <Text className="text-white/90 text-sm font-semibold">今日已完成</Text>
-            <Text className="text-white text-5xl font-bold mt-2 tracking-tight">100%</Text>
+            <Text className="text-white text-5xl font-display font-extrabold mt-2 tracking-tight">100%</Text>
             <View className="mt-3 h-px bg-white/25" />
             <Text className="text-white/90 text-sm font-medium mt-3">
               {plans.length} 项全部完成 ✓

@@ -63,7 +63,9 @@ module.exports = {
       },
       fontFamily: {
         default: ['System'],
-        display: ['System'],
+        sans: ['Inter_400Regular', 'Inter_500Medium', 'Inter_600SemiBold', 'Inter_700Bold', 'System'],
+        display: ['PlusJakartaSans_400Regular', 'PlusJakartaSans_600SemiBold', 'PlusJakartaSans_700Bold', 'PlusJakartaSans_800ExtraBold', 'System'],
+        serif: ['NotoSerifSC_400Regular', 'NotoSerifSC_700Bold', 'System'],
       },
     },
   },

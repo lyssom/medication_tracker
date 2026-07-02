@@ -93,7 +93,7 @@ export default function CareHub() {
     <View className="flex-1 bg-background dark:bg-slate-900">
       {/* Add section */}
       <View className="bg-surface dark:bg-slate-800 p-5 border-b border-divider dark:border-slate-700">
-        <Text className="text-lg font-semibold text-ink dark:text-slate-100 mb-1">添加关心</Text>
+        <Text className="text-lg font-display font-bold text-ink dark:text-slate-100 mb-1">添加关心</Text>
         <Text className="text-xs text-ink-muted dark:text-slate-400 mb-3">
           输入对方邀请码
         </Text>

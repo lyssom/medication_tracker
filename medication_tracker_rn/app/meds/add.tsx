@@ -155,7 +155,9 @@ export default function AddMedScreen() {
       >
         <View className="p-5">
           <View className="mb-5">
-            <Text className="text-2xl font-bold text-ink dark:text-slate-100">添加药物</Text>
+            <Text className="text-2xl font-display font-bold text-ink dark:text-slate-100">
+              添加药物
+            </Text>
             <Text className="text-sm text-ink-muted dark:text-slate-400 mt-1">
               填写下方信息后保存
             </Text>

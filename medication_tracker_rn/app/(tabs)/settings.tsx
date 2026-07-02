@@ -73,7 +73,7 @@ export default function SettingsScreen() {
       className="flex-1 bg-background dark:bg-slate-900"
       contentContainerStyle={{ padding: 20, paddingBottom: 96 }}
     >
-      <Text className="text-2xl font-bold text-ink dark:text-slate-100 mb-5">设置</Text>
+      <Text className="text-2xl font-display font-bold text-ink dark:text-slate-100 mb-5">设置</Text>
 
       {/* Profile */}
       <View className="bg-surface dark:bg-slate-800 rounded-2xl p-5 border border-border dark:border-slate-700 flex-row items-center mb-4">

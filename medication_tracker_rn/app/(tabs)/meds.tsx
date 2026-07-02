@@ -53,7 +53,7 @@ export default function MedsTab() {
       {/* Header */}
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
         <View>
-          <Text className="text-2xl font-bold text-ink dark:text-slate-100">我的药物</Text>
+          <Text className="text-2xl font-display font-bold text-ink dark:text-slate-100">我的药物</Text>
           <Text className="text-sm text-ink-muted dark:text-slate-400 mt-0.5">
             共 {meds.length} 项
           </Text>

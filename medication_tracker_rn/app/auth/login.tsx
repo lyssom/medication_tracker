@@ -63,7 +63,7 @@ export default function LoginScreen() {
           <View className="w-24 h-24 rounded-full bg-primary-soft dark:bg-emerald-900/40 items-center justify-center mb-4 shadow-warm-sm">
             <Ionicons name="medkit" size={48} color="#10B981" />
           </View>
-          <Text className="text-3xl font-bold text-primary dark:text-emerald-400">药伴</Text>
+          <Text className="text-3xl font-display font-extrabold text-primary dark:text-emerald-400">药伴</Text>
           <Text className="text-base text-ink-muted dark:text-slate-400 mt-1">
             吃药不再是一个人的事
           </Text>

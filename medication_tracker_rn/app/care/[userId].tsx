@@ -86,7 +86,7 @@ export default function CareDetailScreen() {
         </Pressable>
         <View className="flex-1">
           <Text className="text-xs text-ink-muted dark:text-slate-400">关心对象</Text>
-          <Text className="text-xl font-bold text-ink dark:text-slate-100 mt-0.5">
+          <Text className="text-xl font-display font-bold text-ink dark:text-slate-100 mt-0.5">
             用户 #{userId}
           </Text>
         </View>
@@ -95,7 +95,7 @@ export default function CareDetailScreen() {
       {/* Stats header */}
       <View className="bg-surface dark:bg-slate-800 px-5 pt-4 pb-5 border-b border-divider dark:border-slate-700">
         <Text className="text-sm text-ink-muted dark:text-slate-400">今日服药</Text>
-        <Text className="text-3xl font-bold text-ink dark:text-slate-100 mt-1">
+        <Text className="text-3xl font-display font-bold text-ink dark:text-slate-100 mt-1">
           {completedCount}
           <Text className="text-lg text-ink-faint dark:text-slate-500">/{totalCount}</Text>
         </Text>
