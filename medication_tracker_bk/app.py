@@ -66,6 +66,35 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
+# ===== 药伴 Landing (静态站，不依赖 nginx 改动) =====
+# nginx 已经 prefstrip (proxy_pass http://127.0.0.1:5001/; 带 /),
+# 所以 lyssom.tech/medication/* 在 Flask 里看到的是 /* 不带前缀。
+# Flask 同进程同时服务：
+#   /                  -> static/yaoban/index.html
+#   /<file>            -> static/yaoban/<file>  (assets/, downloads/, ...)
+#   /api/...           -> 蓝图路由优先匹配 (Werkzeug static > catch-all)
+#   /uploads/...       -> uploaded_file 原路由优先匹配
+LANDING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'yaoban')
+
+
+def _serve_landing(p):
+    # 防御性：API/uploads 路径绝不落入静态服务
+    if p.startswith(('api/', 'uploads/')):
+        from flask import abort
+        abort(404)
+    target = os.path.join(LANDING_DIR, p)
+    if not os.path.isfile(target):
+        target = os.path.join(LANDING_DIR, 'index.html')  # SPA 回落
+    directory, filename = os.path.split(target)
+    return send_from_directory(directory, filename)
+
+
+@app.route('/', defaults={'p': 'index.html'})
+@app.route('/<path:p>')
+def landing(p):
+    return _serve_landing(p)
+
+
 @app.route('/api/health')
 def health():
     try:
