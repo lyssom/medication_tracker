@@ -542,7 +542,7 @@
       <p><span id="dl-size">最新版本</span> · 完全免费 · 无广告 · 无追踪 · Android 8.0 或更高</p>
     </div>
     <div class="qr-card">
-      <img id="qr-img" alt="QR code" />
+      <img src="assets/qr.png" alt="QR code" />
       <h4>扫码也能装</h4>
       <p>手机相机对准二维码<br/>进入下载页</p>
     </div>
@@ -578,7 +578,6 @@
     const dlMeta = document.getElementById('hero-dl-meta');
     const dlSize = document.getElementById('dl-size');
     const topline = document.getElementById('topline-text');
-    const qr = document.getElementById('qr-img');
 
     try {
       const r = await fetch('/api/latest');
@@ -601,17 +600,13 @@
       dlSize.textContent = sizeStr;
       dlMeta.textContent = `v${v.version} · build ${v.build} · ${sizeStr}`;
       topline.textContent = `药伴 v${v.version} · ${v.released_at ? v.released_at.slice(0, 7) : ''} 发布 · Android 优先`;
-
-      // 动态 QR: 指向 prod landing page (永远展示最新版)
-      const pageUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
-      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(pageUrl)}&size=180x180&qzone=2&margin=0`;
-      qr.src = qrSrc;
+      // QR 用静态 png (assets/qr.png), 部署时生成指向当前 download_url
+      // 避免依赖外部 CDN (部分用户网络下 qrserver.com 不可达)
     } catch (e) {
       // fallback: 静态文案
       dlMeta.textContent = 'v0.2.0 · build 200 · 110 MB';
       topline.textContent = '药伴 v0.2.0 · 2026-07 发布 · Android 优先';
       dl.href = 'downloads/medication_tracker_rn_v0.2.0.apk';
-      qr.alt = 'QR 加载失败';
     }
   })();
 </script>
