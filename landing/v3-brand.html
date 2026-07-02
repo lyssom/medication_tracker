@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>药伴 · 吃药不再是一个人的事</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2310B981'/><rect x='15' y='7' width='2.5' height='18' rx='1' fill='white'/><rect x='7' y='15' width='18' height='2.5' rx='1' fill='white'/></svg>" />
+<style>
+  :root {
+    --green:     #10B981;
+    --green-2:   #0EA371;
+    --green-deep:#064E3B;
+    --ink:       #0A0F0C;
+    --paper:     #FAFAF7;
+    --muted:     #4B5E55;
+    --hair:      rgba(10,15,12,.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+  .display { font-family: "Newsreader", "Noto Serif SC", serif; font-weight: 500; }
+  .zh-serif { font-family: "Noto Serif SC", "Songti SC", "Source Han Serif SC", serif; }
+
+  /* nav — solid dark green band, full bleed */
+  nav.site {
+    padding: 22px 0;
+    background: var(--green-deep);
+  }
+  nav .site-inner {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .brand .badge {
+    width: 34px; height: 34px; display: grid; place-items: center;
+  }
+  .brand .badge svg { width: 34px; height: 34px; display: block; }
+  .brand .name {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-weight: 800; font-size: 21px; letter-spacing: .18em;
+    color: #FFFFFF;
+  }
+  nav .links { display: flex; gap: 32px; }
+  nav .links a {
+    color: rgba(255,255,255,.92); text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: color .2s;
+  }
+  nav .links a:hover { color: #FFF; }
+  nav .cta {
+    color: var(--ink); background: #FFF; padding: 10px 20px;
+    border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 14px;
+    transition: transform .2s;
+  }
+  nav .cta:hover { transform: translateY(-1px); }
+
+  /* hero — full bleed brand green */
+  .hero {
+    background: var(--green); color: #FFF;
+    padding: 28px 0 0;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%);
+    width: 1400px; height: 1400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero .topline {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: rgba(255,255,255,.85); margin-bottom: 36px;
+  }
+  .hero .topline .pulse {
+    width: 8px; height: 8px; border-radius: 50%; background: #FFF;
+    box-shadow: 0 0 0 4px rgba(255,255,255,.2);
+    animation: pulse 1.6s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255,.6); }
+    100% { box-shadow: 0 0 0 14px rgba(255,255,255,0); }
+  }
+  .hero h1 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 800;
+    font-size: clamp(52px, 6.5vw, 92px); line-height: 1.05;
+    letter-spacing: -0.01em; margin: 0 0 28px; max-width: 980px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .hero h1 em {
+    font-style: normal; font-weight: 500;
+    text-decoration: underline; text-decoration-thickness: 6px;
+    text-underline-offset: 12px; text-decoration-color: rgba(255,255,255,.45);
+  }
+  .hero .sub {
+    font-size: 19px; color: rgba(255,255,255,.88); line-height: 1.55;
+    max-width: 580px; margin: 0 0 40px;
+  }
+  .hero .actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-bottom: 88px; }
+  .btn-dl {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 28px; background: #FFF; color: var(--green-deep);
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    border-radius: 14px; transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 8px 24px -8px rgba(0,0,0,.2);
+  }
+  .btn-dl:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -12px rgba(0,0,0,.3); }
+  .btn-dl svg { width: 18px; height: 18px; }
+  .meta { font-size: 13.5px; color: rgba(255,255,255,.85); }
+
+  /* phone stage */
+  .stage {
+    display: flex; justify-content: center; gap: 28px;
+    padding: 0 0 60px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .stage-phone {
+    width: 280px; height: 560px; background: #FFF;
+    border-radius: 44px; padding: 14px;
+    border: 10px solid #00261E;
+    box-shadow: 0 50px 80px -40px rgba(0,0,0,.4);
+    overflow: hidden; position: relative;
+    transform: translateY(40px);
+  }
+  .stage-phone::before {
+    content: ""; position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 26px; background: #00261E; border-radius: 14px; z-index: 2;
+  }
+  .sp-2 { transform: translateY(20px); }
+  .sp-3 { transform: translateY(60px); }
+  .sp-inner { padding: 46px 14px 14px; height: 100%; background: #FFFCF6; }
+  .sp-status {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-bottom: 16px;
+  }
+  .sp-status .live { display: flex; align-items: center; gap: 6px; color: var(--green); }
+  .sp-status .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .sp-greet {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 700;
+    font-size: 23px; line-height: 1.2; letter-spacing: 0; margin-bottom: 4px; color: var(--ink);
+  }
+  .sp-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .sp-stat {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-2) 100%);
+    border-radius: 14px; padding: 14px; color: #FFF; margin-bottom: 14px;
+  }
+  .sp-stat .v { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+  .sp-stat .v small { font-size: 13px; font-weight: 400; opacity: .9; margin-left: 2px; }
+  .sp-stat .l { font-size: 10.5px; opacity: .85; }
+  .sp-card {
+    background: #FFF; border-radius: 12px; padding: 11px 12px;
+    margin-bottom: 8px; display: flex; align-items: center; gap: 9px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  }
+  .sp-icon {
+    width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;
+    font-size: 13px;
+  }
+  .sp-icon.a { background: #FEE6DC; color: #B85C3D; }
+  .sp-icon.b { background: #D1F1E5; color: var(--green-deep); }
+  .sp-icon.c { background: #FFF0CC; color: #B58A1F; }
+  .sp-name { font-size: 11px; font-weight: 600; }
+  .sp-time { font-size: 9.5px; color: var(--muted); }
+  .sp-meta { flex: 1; min-width: 0; }
+  .sp-tick {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.3px solid #DDD; display: grid; place-items: center;
+    font-size: 10px;
+  }
+  .sp-tick.done { background: var(--green); border-color: var(--green); color: #FFF; }
+
+  /* feature section */
+  section.feat {
+    padding: 140px 0 80px;
+  }
+  .feat-intro {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    margin-bottom: 80px; align-items: end;
+  }
+  .feat-intro .num {
+    font-family: "Newsreader", serif; font-style: italic;
+    font-size: 18px; color: var(--green); margin-bottom: 12px;
+  }
+  .feat-intro h2 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 700;
+    font-size: clamp(34px, 3.6vw, 50px); line-height: 1.2;
+    letter-spacing: -0.005em; margin: 0;
+  }
+  .feat-intro p {
+    font-size: 17px; color: var(--muted); line-height: 1.7; margin: 0;
+  }
+
+  .feat-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .feature {
+    background: #FFF; border: 1px solid var(--hair);
+    border-radius: 24px; padding: 36px 32px; min-height: 280px;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .feature:hover { transform: translateY(-2px); box-shadow: 0 24px 48px -24px rgba(16,185,129,.2); }
+  .feature .ico {
+    width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+    margin-bottom: 24px; font-size: 22px;
+  }
+  .feature.a .ico { background: rgba(16,185,129,.12); color: var(--green); }
+  .feature.b .ico { background: rgba(184,92,61,.12); color: var(--ink); }
+  .feature.c .ico { background: rgba(11,99,82,.10); color: var(--green-deep); }
+  .feature.d .ico { background: rgba(0,0,0,.05); color: var(--ink); }
+  .feature h3 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 600;
+    font-size: 22px; line-height: 1.3; margin: 0 0 10px;
+  }
+  .feature p { font-size: 14.5px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+  /* care split - dark green band */
+  .care-band {
+    background: var(--green-deep); color: #FFFCF6;
+    padding: 110px 0;
+    position: relative; overflow: hidden;
+  }
+  .care-band .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; position: relative; }
+  .care-band h2 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 700;
+    font-size: clamp(34px, 3.6vw, 50px); line-height: 1.2; letter-spacing: -0.005em;
+    margin: 0 0 24px;
+  }
+  .care-band h2 em { font-style: normal; color: var(--green); font-weight: 500; }
+  .care-band p { font-size: 16px; color: rgba(255,252,246,.7); line-height: 1.7; margin: 0 0 16px; }
+  .role-card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px; padding: 32px;
+  }
+  .role-card .role-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.1);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .role-card h3 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 600;
+    font-size: 22px; line-height: 1.3; margin: 0 0 12px;
+  }
+  .role-card p { font-size: 14px; color: rgba(255,252,246,.7); }
+
+  /* download */
+  section.dl {
+    padding: 100px 0 60px;
+    background: var(--paper);
+  }
+  .dl-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    background: #FFF; border: 1px solid var(--hair);
+    border-radius: 28px; padding: 48px; align-items: center;
+  }
+  .dl-grid h2 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 700;
+    font-size: clamp(28px, 3.2vw, 44px); line-height: 1.25;
+    letter-spacing: -0.005em; margin: 0 0 16px;
+  }
+  .dl-grid h2 em { font-style: normal; color: var(--green); font-weight: 600; }
+  .dl-grid p { font-size: 15px; color: var(--muted); margin: 0 0 28px; }
+  .file-card {
+    background: var(--green-deep); color: #FFFCF6;
+    border-radius: 14px; padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    font-size: 13px;
+  }
+  .file-card .name { font-weight: 600; }
+  .file-card .size { color: rgba(255,252,246,.7); font-weight: 400; }
+  .file-card a {
+    color: var(--green); text-decoration: none; font-weight: 600;
+    background: #FFFCF6; padding: 8px 14px; border-radius: 999px;
+    font-size: 13px;
+  }
+
+  .qr-card {
+    background: var(--green); border-radius: 20px;
+    padding: 32px; color: #FFFCF6; text-align: center;
+  }
+  .qr-card img {
+    width: 180px; height: 180px; background: #FFF;
+    padding: 12px; border-radius: 14px;
+    image-rendering: pixelated; margin-bottom: 16px;
+  }
+  .qr-card h4 {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif; font-weight: 600;
+    font-size: 20px; margin: 0 0 6px;
+  }
+  .qr-card p { font-size: 13px; color: rgba(255,252,246,.85); margin: 0; }
+
+  footer {
+    padding: 36px 0 80px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--hair); margin-top: 40px;
+    font-size: 12.5px; color: var(--muted);
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--ink); font-weight: 500;
+  }
+  .footer-brand .f-badge {
+    width: 22px; height: 22px; display: grid; place-items: center;
+  }
+  .footer-brand .f-badge svg { width: 22px; height: 22px; display: block; }
+  .footer-brand .f-name {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-weight: 700; letter-spacing: .14em; color: var(--ink);
+  }
+  .footer-brand .f-sep { color: var(--hair); padding: 0 4px; }
+  .footer-brand > span:last-child { color: var(--muted); font-weight: 400; }
+  footer .right { display: flex; gap: 20px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 880px) {
+    .feat-intro, .care-band .wrap, .dl-grid { grid-template-columns: 1fr; gap: 36px; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .stage-phone { transform: none !important; }
+    nav .links { display: none; }
+    .wrap { padding: 0 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site" style="color:#FFF;">
+  <div class="wrap" style="display:flex; align-items:center; justify-content:space-between;">
+  <a class="brand" href="#">
+    <span class="badge">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#10B981"/>
+        <rect x="14.75" y="7" width="2.5" height="18" rx="1" fill="white"/>
+        <rect x="7" y="14.75" width="18" height="2.5" rx="1" fill="white"/>
+      </svg>
+    </span>
+    <span class="name">药伴</span>
+  </a>
+  <div class="links">
+    <a href="#feat">功能</a>
+    <a href="#care">关系</a>
+    <a href="#dl">下载</a>
+  </div>
+  <a class="cta" href="#dl" id="nav-cta">免费下载</a>
+  </div>
+</nav>
+
+<header class="hero" style="color:#FFF;">
+  <div class="wrap">
+    <div class="topline">
+      <span class="pulse"></span>
+      <span id="topline-text">药伴 · Android 优先</span>
+    </div>
+    <h1>吃药不再，<br/><em>是一个人的事。</em></h1>
+    <p class="sub">
+      一份服药记录，一份远方的安心。把你和关心你的人连成一条线——
+      让每一次准时服药，能被人远远看见。
+    </p>
+    <div class="actions">
+      <a class="btn-dl" id="hero-dl" href="#" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+        <span id="hero-dl-text">下载 Android APK</span>
+      </a>
+      <span class="meta" id="hero-dl-meta">最新版本 · Android 8.0+</span>
+    </div>
+
+    <div class="stage">
+      <div class="stage-phone">
+        <div class="sp-inner">
+          <div class="sp-status"><span>11:24</span><span class="live">同步</span></div>
+          <div class="sp-greet">今天的<br/>三次胶囊</div>
+          <div class="sp-sub">本周依从 92% · 已坚持 28 天</div>
+
+          <div class="sp-stat">
+            <div class="v">7<small>天</small></div>
+            <div class="l">当前连续</div>
+          </div>
+
+          <div class="sp-card">
+            <div class="sp-icon a">●</div>
+            <div class="sp-meta">
+              <div class="sp-name">降压药 · 氨氯地平</div>
+              <div class="sp-time">08:00 · 已服</div>
+            </div>
+            <div class="sp-tick done">✓</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-icon b">●</div>
+            <div class="sp-meta">
+              <div class="sp-name">二甲双胍 · 0.5g</div>
+              <div class="sp-time">13:00 · 待服</div>
+            </div>
+            <div class="sp-tick"></div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-icon c">●</div>
+            <div class="sp-meta">
+              <div class="sp-name">阿托伐他汀</div>
+              <div class="sp-time">21:30 · 待服</div>
+            </div>
+            <div class="sp-tick"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-phone sp-2">
+        <div class="sp-inner">
+          <div class="sp-status"><span>11:24</span><span class="live">2 人关注</span></div>
+          <div class="sp-greet">妈妈的<br/>服药情况</div>
+          <div class="sp-sub">今天你收到 3 次打卡</div>
+
+          <div class="sp-card">
+            <div class="sp-icon a">●</div>
+            <div class="sp-meta">
+              <div class="sp-name">降压药</div>
+              <div class="sp-time">08:12 · 已服</div>
+            </div>
+            <div class="sp-tick done">✓</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-icon b">●</div>
+            <div class="sp-meta">
+              <div class="sp-name">二甲双胍</div>
+              <div class="sp-time">13:00 · 等待中</div>
+            </div>
+            <div class="sp-tick"></div>
+          </div>
+
+          <div class="sp-stat" style="margin-top:14px;">
+            <div class="v">12<small>天</small></div>
+            <div class="l">本月她都坚持得很好</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-phone sp-3">
+        <div class="sp-inner">
+          <div class="sp-status"><span>11:24</span><span class="live">编辑</span></div>
+          <div class="sp-greet">新增药品</div>
+          <div class="sp-sub">填写一次，长期有效</div>
+
+          <div class="sp-card" style="display:block;">
+            <div class="sp-meta" style="margin-bottom:6px;">
+              <div class="sp-name">药品名称</div>
+              <div class="sp-time">苯磺酸氨氯地平片</div>
+            </div>
+            <div class="sp-meta" style="margin-bottom:6px;">
+              <div class="sp-name">剂量</div>
+              <div class="sp-time">5mg · 每日 1 次</div>
+            </div>
+            <div class="sp-meta">
+              <div class="sp-name">提醒时刻</div>
+              <div class="sp-time">08:00</div>
+            </div>
+          </div>
+
+          <div class="sp-card" style="background: var(--green); color:#FFF; display:block; text-align:center; font-weight:600; font-size:13px;">
+            保存
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="feat wrap" id="feat">
+  <div class="feat-intro">
+    <div>
+      <div class="num">— 01</div>
+      <h2>把 <em style="font-style:normal; color:var(--green);">小事</em>，<br/>做得不那么脆弱。</h2>
+    </div>
+    <p>
+      慢性病患者的服药周期很长，但人的记忆力却很短。
+      药伴没把它做得很复杂——只做那些真正有用的小事：每日提醒、一键打卡、分享给家人。
+    </p>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feature a">
+      <div class="ico">⏰</div>
+      <h3>每种药都有自己的<br/>时刻表</h3>
+      <p>支持任意剂量与频次。错峰提醒，不打扰你做其他事。</p>
+    </div>
+    <div class="feature b">
+      <div class="ico">♡</div>
+      <h3>漏服不指责，<br/>只记录原因</h3>
+      <p>忘了？身体不适？还是在忙？写下的理由，会成为下次复诊时给医生的素材。</p>
+    </div>
+    <div class="feature c">
+      <div class="ico">↗</div>
+      <h3>一条邀请码，<br/>把关心交给家人</h3>
+      <p>无需对方注册账号。一串数字，远方的那个人就能看见你今天的服药。</p>
+    </div>
+    <div class="feature d">
+      <div class="ico">⟳</div>
+      <h3>自动版本检测，<br/>永远是最新版</h3>
+      <p>应用启动时静默检查新版本。可选更新或强制更新——配置一次，省心。</p>
+    </div>
+  </div>
+</section>
+
+<section class="care-band" id="care">
+  <div class="wrap">
+    <div>
+      <h2>两个角色，<br/><em>同一条</em> 服药记录。</h2>
+      <p>
+        这是药伴最朴素的设计动机——把那些"关心你吃药"的动作，
+        变成一份可信任、可分享、不打扰的记录。
+      </p>
+      <p>不催你、不监视你、不替你做任何决定。只在后台安静地记着。</p>
+    </div>
+    <div style="display: grid; gap: 20px;">
+      <div class="role-card">
+        <div class="role-tag">─ 服药者 · Care Receiver</div>
+        <h3>「我不需要每天向谁汇报。」</h3>
+        <p>录入药品、设置提醒、点击打卡。每周自动生成的依从率，是对自己身体的一个交代。</p>
+      </div>
+      <div class="role-card">
+        <div class="role-tag">─ 关心者 · Care Giver</div>
+        <h3>「我不在家，但我知道她准时吃了。」</h3>
+        <p>只需对方的邀请码。每天一次的轻推送——服药清单、漏服提醒——而不是一条又一条的「吃了没」。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dl wrap" id="dl">
+  <div class="dl-grid">
+    <div>
+      <h2>装上 <em>药伴</em>，<br/>吃药，不再是一个人的事。</h2>
+      <p><span id="dl-size">最新版本</span> · 完全免费 · 无广告 · 无追踪 · Android 8.0 或更高</p>
+    </div>
+    <div class="qr-card">
+      <img id="qr-img" alt="QR code" />
+      <h4>扫码也能装</h4>
+      <p>手机相机对准二维码<br/>进入下载页</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      <span class="f-badge">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#10B981"/>
+          <rect x="14.75" y="7" width="2.5" height="18" rx="1" fill="white"/>
+          <rect x="7" y="14.75" width="18" height="2.5" rx="1" fill="white"/>
+        </svg>
+      </span>
+      <span class="f-name">药伴</span>
+      <span class="f-sep">·</span>
+      <span>© 2026 lyssom.tech/medication</span>
+    </div>
+    <div class="right">
+      <a href="https://lyssom.tech/medication/api/health">API · 健康检查</a>
+      <a href="#">隐私</a>
+      <a href="#">关于</a>
+    </div>
+  </footer>
+</section>
+
+</body>
+<script>
+  // 动态版本 + 下载链接 + QR
+  (async function() {
+    const dl = document.getElementById('hero-dl');
+    const dlText = document.getElementById('hero-dl-text');
+    const dlMeta = document.getElementById('hero-dl-meta');
+    const dlSize = document.getElementById('dl-size');
+    const topline = document.getElementById('topline-text');
+    const qr = document.getElementById('qr-img');
+
+    try {
+      const r = await fetch('/api/latest');
+      const j = await r.json();
+      const v = j && j.data;
+      if (!v || !v.download_url) throw new Error('no version info');
+
+      const filename = v.download_url.split('/').pop();
+      dl.href = v.download_url;
+      dl.setAttribute('download', filename);
+
+      // 预探测 HEAD 拿文件大小
+      let sizeStr = '最新版本';
+      try {
+        const head = await fetch(v.download_url, { method: 'HEAD' });
+        const bytes = Number(head.headers.get('content-length') || 0);
+        if (bytes > 0) sizeStr = (bytes / 1024 / 1024).toFixed(1) + ' MB';
+      } catch (_) {}
+
+      dlSize.textContent = sizeStr;
+      dlMeta.textContent = `v${v.version} · build ${v.build} · ${sizeStr}`;
+      topline.textContent = `药伴 v${v.version} · ${v.released_at ? v.released_at.slice(0, 7) : ''} 发布 · Android 优先`;
+
+      // 动态 QR: 指向 prod landing page (永远展示最新版)
+      const pageUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(pageUrl)}&size=180x180&qzone=2&margin=0`;
+      qr.src = qrSrc;
+    } catch (e) {
+      // fallback: 静态文案
+      dlMeta.textContent = 'v0.2.0 · build 200 · 110 MB';
+      topline.textContent = '药伴 v0.2.0 · 2026-07 发布 · Android 优先';
+      dl.href = 'downloads/medication_tracker_rn_v0.2.0.apk';
+      qr.alt = 'QR 加载失败';
+    }
+  })();
+</script>
+</html>
