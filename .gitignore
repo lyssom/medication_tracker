@@ -77,4 +77,13 @@ Thumbs.db
 !.env.example
 medication_tracker_rn/android
 .agents/
-.agents/
+
+# ======================
+# Built artifacts (local APK builds, screenshots)
+# ======================
+*.apk
+*.aab
+*.jpg
+bcd3faee99a4870440fcc3e45182d3c4.jpg
+e1ad79d0b9a2abd542c71aa5bd0b390c.jpg
+medication_tracker.apk
