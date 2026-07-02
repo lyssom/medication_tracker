@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Alert, Platform } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useMedStore } from '../../src/store/useMedStore'
 
@@ -176,8 +177,8 @@ export default function AddMedScreen() {
                     <Text className="text-emerald-600 text-2xl font-bold tracking-tight">{e.time}</Text>
                   </Pressable>
                   {schedule.length > 1 && (
-                    <Pressable onPress={() => removeRow(e.id)} className="w-8 h-8 items-center justify-center rounded-full bg-red-50 active:bg-red-100">
-                      <Text className="text-red-500 text-lg font-bold">✕</Text>
+                    <Pressable onPress={() => removeRow(e.id)} className="w-8 h-8 items-center justify-center rounded-full bg-danger-soft active:bg-rose-100">
+                      <Ionicons name="close" size={18} color="#F43F5E" />
                     </Pressable>
                   )}
                 </View>

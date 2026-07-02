@@ -24,7 +24,7 @@ export default function SettingsScreen() {
   ]
 
   return (
-    <View className="flex-1 bg-gray-50 p-5">
+    <View className="flex-1 bg-background p-5 pb-24">
       <Text className="text-2xl font-bold text-gray-900 mb-5">设置</Text>
 
       {/* Profile card */}

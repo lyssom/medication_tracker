@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, FlatList, Pressable, ActivityIndicator, Alert, RefreshControl } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { useMedStore } from '../../src/store/useMedStore'
 
 export default function MedsTab() {
@@ -43,18 +44,19 @@ export default function MedsTab() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-background">
       {/* Header */}
       <View className="flex-row items-center justify-between px-5 pt-5 pb-3">
         <View>
-          <Text className="text-2xl font-bold text-gray-900">我的药物</Text>
-          <Text className="text-sm text-gray-500 mt-0.5">共 {meds.length} 项</Text>
+          <Text className="text-2xl font-bold text-ink">我的药物</Text>
+          <Text className="text-sm text-ink-muted mt-0.5">共 {meds.length} 项</Text>
         </View>
         <Pressable
           onPress={() => router.push('/meds/add')}
-          className="bg-emerald-500 rounded-full px-5 py-2.5 active:bg-emerald-600 shadow-sm"
+          className="bg-primary rounded-full px-5 py-2.5 active:bg-primary-hover shadow-warm-sm flex-row items-center"
         >
-          <Text className="text-white font-semibold">+ 添加</Text>
+          <Ionicons name="add" size={18} color="#fff" />
+          <Text className="text-white font-semibold ml-1">添加</Text>
         </Pressable>
       </View>
 
@@ -65,31 +67,33 @@ export default function MedsTab() {
         </View>
       ) : meds.length === 0 ? (
         <View className="flex-1 items-center justify-center px-8">
-          <Text className="text-7xl mb-4">💊</Text>
-          <Text className="text-lg font-semibold text-gray-700 mb-2">还没有药物</Text>
-          <Text className="text-sm text-gray-500 text-center">点击右上角"添加"开始管理你的药物清单</Text>
+          <Ionicons name="medkit-outline" size={80} color="#F3E9DA" />
+          <Text className="text-lg font-semibold text-ink mt-4 mb-2">还没有药物</Text>
+          <Text className="text-sm text-ink-muted text-center">
+            点击右上角「添加」开始管理你的药物清单
+          </Text>
         </View>
       ) : (
         <FlatList
           data={meds}
           keyExtractor={(m) => String(m.id)}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 96 }}
           ItemSeparatorComponent={() => <View className="h-3" />}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10B981" />
           }
           renderItem={({ item: m }) => (
-            <View className="bg-white rounded-2xl p-4 border border-gray-100 flex-row items-center">
+            <View className="bg-surface rounded-2xl p-4 border border-border flex-row items-center">
               <Pressable
                 onPress={() => router.push({ pathname: '/meds/add', params: { id: String(m.id) } })}
                 className="flex-row items-center flex-1 active:opacity-70"
               >
-                <View className="w-10 h-10 rounded-full bg-emerald-50 items-center justify-center mr-3">
-                  <Text className="text-lg">💊</Text>
+                <View className="w-10 h-10 rounded-full bg-primary-soft items-center justify-center mr-3">
+                  <Ionicons name="medkit" size={20} color="#10B981" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-base font-semibold text-gray-900">{m.name}</Text>
-                  <Text className="text-xs text-gray-500 mt-0.5">
+                  <Text className="text-base font-semibold text-ink">{m.name}</Text>
+                  <Text className="text-xs text-ink-muted mt-0.5">
                     {m.alias ?? '无别名'} · 库存 {m.stock}
                     {m.unit}
                   </Text>
@@ -99,12 +103,12 @@ export default function MedsTab() {
                 onPress={() => confirmDelete(m.id, m.name)}
                 disabled={deletingId === m.id}
                 hitSlop={10}
-                className="ml-2 w-9 h-9 rounded-full bg-red-50 items-center justify-center active:bg-red-100"
+                className="ml-2 w-10 h-10 rounded-full bg-danger-soft items-center justify-center active:bg-rose-100"
               >
                 {deletingId === m.id ? (
-                  <ActivityIndicator size="small" color="#EF4444" />
+                  <ActivityIndicator size="small" color="#F43F5E" />
                 ) : (
-                  <Text className="text-red-500 text-lg font-bold">✕</Text>
+                  <Ionicons name="close" size={20} color="#F43F5E" />
                 )}
               </Pressable>
             </View>

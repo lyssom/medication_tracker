@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { useAuthStore } from '../../src/store/useAuthStore'
 
 export default function LoginScreen() {
@@ -51,11 +52,11 @@ export default function LoginScreen() {
       <View className="flex-1 justify-center px-6">
         {/* Logo + title */}
         <View className="items-center mb-8">
-          <View className="w-24 h-24 rounded-full bg-emerald-50 items-center justify-center mb-4 shadow-sm">
-            <Text className="text-5xl">💊</Text>
+          <View className="w-24 h-24 rounded-full bg-primary-soft items-center justify-center mb-4 shadow-warm-sm">
+            <Ionicons name="medkit" size={48} color="#10B981" />
           </View>
-          <Text className="text-3xl font-bold text-emerald-500">药伴</Text>
-          <Text className="text-base text-gray-500 mt-1">吃药不再是一个人的事</Text>
+          <Text className="text-3xl font-bold text-primary">药伴</Text>
+          <Text className="text-base text-ink-muted mt-1">吃药不再是一个人的事</Text>
         </View>
 
         {/* Form card */}

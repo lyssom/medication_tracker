@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { View, Text, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, ActivityIndicator, Pressable } from 'react-native'
+import { useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { caresAPI } from '../../src/services/api'
 
 interface CareMeRow {
@@ -11,6 +13,7 @@ interface CareMeRow {
 }
 
 export default function CareMeScreen() {
+  const router = useRouter()
   const [rows, setRows] = useState<CareMeRow[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -37,32 +40,38 @@ export default function CareMeScreen() {
       </View>
       {rows.length === 0 ? (
         <View className="flex-1 items-center justify-center px-8">
-          <Text className="text-7xl mb-4">👥</Text>
-          <Text className="text-lg font-semibold text-gray-700 mb-2">还没有人关心你</Text>
-          <Text className="text-sm text-gray-500 text-center">把你的邀请码分享给亲友</Text>
+          <Ionicons name="people-outline" size={80} color="#F3E9DA" />
+          <Text className="text-lg font-semibold text-ink mt-4 mb-2">还没有人关心你</Text>
+          <Text className="text-sm text-ink-muted text-center">把你的邀请码分享给亲友</Text>
         </View>
       ) : (
         <FlatList
           data={rows}
           keyExtractor={(r) => String(r.id)}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24, gap: 12 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 96, gap: 12 }}
           renderItem={({ item: r }) => (
-            <View className="bg-white rounded-2xl p-4 border border-gray-100 flex-row items-center">
+            <Pressable
+              onPress={() =>
+                router.push({ pathname: '/care/[userId]', params: { userId: String(r.supervisor_id) } })
+              }
+              className="bg-surface rounded-2xl p-4 border border-border flex-row items-center active:bg-background"
+            >
               <View className="w-10 h-10 rounded-full bg-blue-50 items-center justify-center mr-3">
-                <Text className="text-lg">👤</Text>
+                <Ionicons name="person" size={20} color="#3B82F6" />
               </View>
               <View className="flex-1">
-                <Text className="text-base font-semibold text-gray-900">
+                <Text className="text-base font-semibold text-ink">
                   {r.supervisor_name ?? `用户 #${r.supervisor_id}`}
                 </Text>
                 <View className="flex-row items-center mt-1">
                   <View className="bg-blue-50 rounded-full px-2 py-0.5 mr-2">
                     <Text className="text-xs text-blue-600">{r.relation_type}</Text>
                   </View>
-                  <Text className="text-xs text-gray-400">{r.status}</Text>
+                  <Text className="text-xs text-ink-faint">{r.status}</Text>
                 </View>
               </View>
-            </View>
+              <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+            </Pressable>
           )}
         />
       )}
