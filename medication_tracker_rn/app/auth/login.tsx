@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthStore } from '../../src/store/useAuthStore'
 import { haptics } from '../../src/utils/haptics'
+import { Logo } from '../../src/components/Logo'
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -60,8 +61,8 @@ export default function LoginScreen() {
       >
         {/* Logo + title */}
         <View className="items-center mb-8">
-          <View className="w-24 h-24 rounded-full bg-primary-soft dark:bg-emerald-900/40 items-center justify-center mb-4 shadow-warm-sm">
-            <Ionicons name="medkit" size={48} color="#10B981" />
+          <View className="w-24 h-24 rounded-full bg-primary-soft dark:bg-emerald-900/40 items-center justify-center mb-4 shadow-warm-sm border-2 border-primary/20 dark:border-emerald-900/40 overflow-hidden">
+            <Logo size={88} tilt={-18} />
           </View>
           <Text className="text-3xl font-display font-extrabold text-primary dark:text-emerald-400">药伴</Text>
           <Text className="text-base text-ink-muted dark:text-slate-400 mt-1">
