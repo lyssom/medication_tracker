@@ -8,11 +8,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthStore } from '../../src/store/useAuthStore'
 import { haptics } from '../../src/utils/haptics'
+import appLogo from '../../assets/images/icon.png'
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -60,8 +62,12 @@ export default function LoginScreen() {
       >
         {/* Logo + title */}
         <View className="items-center mb-8">
-          <View className="w-24 h-24 rounded-full bg-primary-soft dark:bg-emerald-900/40 items-center justify-center mb-4 shadow-warm-sm">
-            <Ionicons name="medkit" size={48} color="#10B981" />
+          <View className="w-24 h-24 rounded-full overflow-hidden mb-4 shadow-warm-sm border-2 border-primary-soft dark:border-emerald-900/40">
+            <Image
+              source={appLogo}
+              style={{ width: 96, height: 96 }}
+              resizeMode="cover"
+            />
           </View>
           <Text className="text-3xl font-display font-extrabold text-primary dark:text-emerald-400">药伴</Text>
           <Text className="text-base text-ink-muted dark:text-slate-400 mt-1">

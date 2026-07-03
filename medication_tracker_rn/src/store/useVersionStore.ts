@@ -74,8 +74,20 @@ export const useVersionStore = create<VersionState>((set, get) => ({
       const cmpV = compareVersions(localVersion, data.version);
       const cmpB = compareBuilds(localBuild, data.build);
 
-      const updateNeeded =
-        cmpV < 0 || (cmpV === 0 && cmpB < 0);
+      // 严格递增: 只有 local 真的 < remote 才弹.
+      // 加防误报: 拿不到本地版本 (fallback 0.0.0) 或 build (null) 时,
+      // 跨版本/跨 build 比较可能误报. 这种情况下不弹.
+      const unknownLocal =
+        localVersion === '0.0.0' || localBuild == null;
+      const updateNeeded = unknownLocal
+        ? false
+        : cmpV < 0 || (cmpV === 0 && cmpB < 0);
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `[useVersionStore] local=${localVersion}(${localBuild}) remote=${data.version}(${data.build}) ` +
+          `cmpV=${cmpV} cmpB=${cmpB} updateNeeded=${updateNeeded} unknownLocal=${unknownLocal}`
+      );
 
       set({
         latest: data,
