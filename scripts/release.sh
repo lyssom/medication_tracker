@@ -87,7 +87,8 @@ LOCAL_COPY="/root/medication_tracker/medication_tracker.apk"
 cp "$APK_REL" "$LOCAL_COPY"
 
 echo "==> 6. scp APK → prod"
-scp -i "$KEY" -o StrictHostKeyChecking=accept-new "$APK_REL" "$REMOTE:$REMOTE_DIR/$APK_NAME" 2>&1 | tail -2
+# 注意: 不要用 '| tail -N' 会让 scp 中途收 SIGPIPE 退出 (APK 传一半)
+scp -i "$KEY" -o StrictHostKeyChecking=accept-new "$APK_REL" "$REMOTE:$REMOTE_DIR/$APK_NAME"
 
 echo "==> 7. 更新 latest.json"
 cat > /root/medication_tracker/medication_tracker_bk/uploads/latest.json << JEOF
@@ -100,10 +101,10 @@ cat > /root/medication_tracker/medication_tracker_bk/uploads/latest.json << JEOF
   "notes": "C7 + 药丸 icon. versionCode ${VC} (递增). 全 release 流程封装在 scripts/release.sh"
 }
 JEOF
-scp -i "$KEY" -o StrictHostKeyChecking=accept-new /root/medication_tracker/medication_tracker_bk/uploads/latest.json "$REMOTE:$REMOTE_UPLOADS/latest.json" 2>&1 | tail -1
+scp -i "$KEY" -o StrictHostKeyChecking=accept-new /root/medication_tracker/medication_tracker_bk/uploads/latest.json "$REMOTE:$REMOTE_UPLOADS/latest.json"
 
 echo "==> 8. restart flask"
-ssh -i "$KEY" -o StrictHostKeyChecking=accept-new "$REMOTE" "systemctl restart medication_tracker.service" 2>&1 | tail -1
+ssh -i "$KEY" -o StrictHostKeyChecking=accept-new "$REMOTE" "systemctl restart medication_tracker.service"
 
 echo "==> 9. verify"
 curl -s https://lyssom.tech/medication/api/latest | head -c 400
