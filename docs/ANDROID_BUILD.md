@@ -231,6 +231,24 @@ pkill -9 -f java
 | 内存临界 8G | 跑 NDK 编译时如果系统其他进程占内存，可能 OOM |
 | 磁盘临界 17G free | 装 SDK 11G + 缓存 6G，剩 0 时 build 必失败 |
 
+## ⚠️ versionCode 必须递增
+
+**陷阱**：`expo prebuild` 每次会重置 `android/app/build.gradle` 里的 `versionCode 1` + `versionName "0.0.1"`. v0.1→v0.4 4 个 release 都 versionCode=1, 装到手机上后, 同包名同签名同 versionCode 装新版本, Android 拒装 (MIUI/EMUI/ColorOS 报“包无效”).
+
+**修法 1 (手动, 本项目用)**: `scripts/release.sh` 脚本会 prebuild 后 sed 改 versionCode + 打包 + 部署. 一行搞定.
+
+```bash
+./scripts/release.sh 501 0.5.1   # versionCode=501, versionName=0.5.1
+```
+
+**修法 2 (长期 P3)**: 装 `expo-build-properties` plugin, 从 `app.json.version` 派生 versionCode (自动, 不用 sed).
+
+```json
+"plugins": [["expo-build-properties", {
+  "android": { "versionCode": "${calc(app.json.expo.version)}" }
+}]]
+```
+
 ## 网络代理 (mihomo on 127.0.0.1:7890)
 
 本机走 mihomo 代理。`dl.google.com` / `services.gradle.org` 直连不通，但代理 OK。Gradle 不会自动读 `http_proxy` env，必须显式配。
