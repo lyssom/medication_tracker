@@ -26,7 +26,7 @@ PROJ="/root/medication_tracker/medication_tracker_rn"
 APK_REL="$PROJ/android/app/build/outputs/apk/release/app-release.apk"
 KEY="/root/metadao/.deploy-keys/id_ed25519"
 REMOTE="root@114.215.177.111"
-REMOTE_DIR="/opt/medication_tracker_bk/static/yaoban"
+REMOTE_DIR="/opt/medication_tracker_bk/static/yaoban/downloads"
 REMOTE_UPLOADS="/opt/medication_tracker_bk/uploads"
 
 # 1. prebuild (重生 android/, 引用最新 assets/images/*.png)
