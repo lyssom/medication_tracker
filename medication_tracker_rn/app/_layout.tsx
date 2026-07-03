@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { View, ActivityIndicator } from 'react-native'
+import { useRouter, useSegments } from 'expo-router'
 import { useFonts } from 'expo-font'
 import {
   Inter_400Regular,
@@ -28,6 +29,8 @@ import { authAPI } from '../src/services/api'
 
 export default function RootLayout() {
   const { accessToken, hasHydrated, logout } = useAuthStore()
+  const router = useRouter()
+  const segments = useSegments()
   const latest = useVersionStore((s) => s.latest)
   const updateAvailable = useVersionStore((s) => s.isUpdateAvailable)
   const mandatory = useVersionStore((s) => s.mandatory)
@@ -65,6 +68,18 @@ export default function RootLayout() {
   useEffect(() => {
     hydrateFromSystem()
   }, [mode, hydrateFromSystem])
+
+  // Auth redirect: 未登录 → /auth/login, 已登录 → /(tabs)
+  useEffect(() => {
+    if (!hasHydrated) return
+    const inAuthGroup = segments[0] === 'auth'
+    if (!accessToken && !inAuthGroup) {
+      router.replace('/auth/login')
+    } else if (accessToken && inAuthGroup) {
+      router.replace('/(tabs)')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasHydrated, accessToken, segments])
 
   if (!hasHydrated || !fontsLoaded) {
     return (
